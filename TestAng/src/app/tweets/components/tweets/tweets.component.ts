@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Tweet } from 'src/app/Tweet';
-import { TestServiceService } from 'src/app/test-service.service';
+import { TestServiceService } from 'src/app/tweets-service.service';
 @Component({
   selector: 'app-tweets',
   templateUrl: './tweets.component.html',

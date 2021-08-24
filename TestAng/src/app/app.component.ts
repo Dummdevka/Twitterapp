@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { TestServiceService } from './test-service.service';
+import { TestServiceService } from './tweets-service.service';
 import { Tweet } from './Tweet';
 @Component({
   selector: 'app-root',
