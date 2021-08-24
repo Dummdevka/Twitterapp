@@ -1,0 +1,5 @@
+CREATE TABLE IF NOT EXISTS users(
+    id INT(6) AUTO_INCREMENT PRIMARY KEY,
+    email VARCHAR(256),
+    password VARCHAR(256)
+)
