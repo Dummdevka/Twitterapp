@@ -10,14 +10,15 @@ const httpOptions = {
   headers: new HttpHeaders({
     'Content-Type': 'application/json',
     'Access-Control-Allow-Origin': '*',
-    'Access-Control-Allow-Headers': '*'
+    'Access-Control-Allow-Headers': '*',
+    'Access-Control-Allow-Methods': '*'
   })
 };
 @Injectable({
   providedIn: 'root'
 })
 export class TestServiceService {
-  private apiUrl = 'http://localhost/learnang/Twitter';
+  private apiUrl = 'http://localhost/twitterapp/Twitter';
   constructor( private http:HttpClient) { 
 
   }
