@@ -1,0 +1,28 @@
+.postTweet{
+    display: flex;
+    align-items: center;
+}
+.singleTweet{
+    width: 80%;
+    margin-left: 10%;
+    margin-right: 8px;
+    border: 2px #777 solid;
+    background-color: #173f5f;
+    color: #b8b8b8;
+    font-size: 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1em;
+    padding-left: 1em;
+    padding-right: 1em;
+    border-radius: 4px;
+}
+.tweetOpt{
+    display: flex;
+    flex-direction: column;
+    text-align: right;
+}
+small{
+    margin-bottom: 3px;
+}

@@ -1,0 +1,11 @@
+<div class="postTweet">
+<div class="singleTweet">
+    <p class="tweetText">{{tweet.tweet}}</p>
+    <div class="tweetOpt">
+        <small class="tweetUser">{{tweet.username}}</small>
+        <small class="tweetTime">{{tweet.time}}</small>
+    </div>
+</div>
+<fa-icon [icon]="faTrash" (click)="DeleteTweet(tweet)"></fa-icon>
+</div>
+
