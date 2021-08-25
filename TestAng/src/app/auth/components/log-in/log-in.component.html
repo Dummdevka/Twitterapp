@@ -1,1 +1,10 @@
-<p>log-in works!</p>
+<div class="logIn authContent">
+    <app-button [routerLink]="'/signup'" [text]="'Sign-Up'"></app-button>
+    <form class="authForm">
+        <label for="email">Your e-mail:</label>
+        <input type="text" id="email" name="email" class="authInput">
+        <label for="pass">Your password:</label>
+        <input type="text" id="pass" name="pass" class="authInput">
+        <input type="submit" value="Log In!" id="signUpButton">
+    </form>
+</div>

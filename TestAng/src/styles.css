@@ -2,3 +2,38 @@ body{
     background-color: #333;
     font-family: 'Arial';
 }
+.authContent{
+    display: flex;
+    justify-content: center;
+    width: 60%;
+    flex-flow: column;
+    margin-left: 20%;
+    background-color: rgb(114, 147, 170);
+}
+.authForm{
+    display: flex;
+    justify-content: center;
+    flex-flow: column;
+    width: 90%;
+    margin-left: 5%;
+    margin-top: 1em;
+
+}
+.authInput{
+    margin-bottom: 1.5em;
+    margin-top: 0.5em;
+    border-radius: 10px;
+    border: 1px black solid;
+    height: 18px;
+}
+#signUpButton{
+    height: 20px;
+    background-color: green;
+    margin-bottom: 10px;
+    border: 1px black solid;
+}
+#signUpButton:hover{
+    height: 21px;
+    background-color: rgb(2, 114, 2);
+    margin-bottom: 9px;
+}

@@ -11,6 +11,18 @@ import { TweetItemComponent } from './tweets/components/tweet-item/tweet-item.co
 import { SignUpComponent } from './auth/components/sign-up/sign-up.component';
 import { LogInComponent } from './auth/components/log-in/log-in.component';
 import { ButtonComponent } from './auth/components/button/button.component';
+import { AppRoutingModule } from './app-routing.module';
+import { Routes, RouterModule } from '@angular/router';
+
+const routes: Routes = [
+  {path: 'tweets', 
+  component: TweetsComponent},
+  {path: 'signup',
+   component: SignUpComponent},
+  {path: '', redirectTo: '/signup', pathMatch: 'full'},
+  {path: 'login', component: LogInComponent}
+];
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -26,7 +38,12 @@ import { ButtonComponent } from './auth/components/button/button.component';
     BrowserModule,
     HttpClientModule,
     FormsModule,
-    FontAwesomeModule
+    FontAwesomeModule,
+    AppRoutingModule,
+    RouterModule.forRoot(
+      routes,
+      { enableTracing: true } // <-- debugging purposes only
+    )
   ],
   providers: [],
   bootstrap: [AppComponent]
