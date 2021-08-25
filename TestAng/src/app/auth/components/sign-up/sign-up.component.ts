@@ -7,8 +7,29 @@ import { Component, OnInit } from '@angular/core';
 })
 export class SignUpComponent implements OnInit {
 
-  constructor() { }
+  username!:string;
+  email!:string;
+  pass!: string;
 
+
+  constructor() { 
+
+  }
+  CheckUsername(){
+    if(this.username.length<7){
+      console.log('too short');
+    }
+  }
+  CheckEmail(){
+    if(this.username.length<7){
+      console.log('too short');
+    }
+  }
+  CheckPass(){
+    if(this.username.length<7){
+      console.log('too short');
+    }
+  }
   ngOnInit(): void {
   }
 
