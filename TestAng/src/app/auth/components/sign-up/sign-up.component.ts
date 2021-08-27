@@ -1,4 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { User } from 'src/app/User';
+import { AuthService } from '../../auth.service';
+import { Observable } from 'rxjs';
 import { FormBuilder, FormControl, FormGroup, ValidationErrors, Validators } from '@angular/forms';
 @Component({
   selector: 'app-sign-up',
@@ -7,10 +10,10 @@ import { FormBuilder, FormControl, FormGroup, ValidationErrors, Validators } fro
 })
 export class SignUpComponent implements OnInit {
 
-
+  @Output() signUpFunc = new EventEmitter;
   signupForm!: FormGroup;
 
-  constructor( private fb: FormBuilder) { 
+  constructor( private fb: FormBuilder, private authService: AuthService) { 
 
   }
   
@@ -26,8 +29,8 @@ export class SignUpComponent implements OnInit {
         Validators.email
       ]],
       pass: ['',
-        Validators.required,
-        Validators.minLength(6)
+        [Validators.required,
+        Validators.minLength(6)]
       ]
     });
   }
@@ -40,5 +43,26 @@ export class SignUpComponent implements OnInit {
   }
   get pass() {
     return this.signupForm.get('pass');
+  }
+
+  onSignUp(username:string, email:string, pass:string){
+
+    if(this.signupForm.status === 'VALID'){
+      const user: User = {
+        username: username,
+        email: email,
+        pass:pass
+      }
+      this.authService.addUser(user).subscribe((success)=>{
+        console.log("Cool");
+      },
+      (error)=>{
+        console.log(error);
+      });
+    } else{
+      alert("You can't submit an invalid form!");
+    }
+    
+
   }
 }

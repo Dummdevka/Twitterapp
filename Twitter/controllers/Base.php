@@ -2,12 +2,11 @@
 
 abstract class BaseController
 {
-    //public $template;
-    public $db;
-
-    public function __construct($pdo)
+    public $db_tweets;
+    public $db_auth;
+    public function __construct($db_tweets, $db_auth)
     {
-        $this->db = $pdo;
-        //$this->template = $view;
+        $this->db_tweets = $db_tweets;
+        $this->db_auth = $db_auth;
     }
 }

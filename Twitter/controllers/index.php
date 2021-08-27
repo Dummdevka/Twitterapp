@@ -3,9 +3,9 @@ require_once __DIR__ .DS. 'Base.php';
 
 class Index extends BaseController
 {
-    public function __construct($pdo)
+    public function __construct($db_tweets, $db_auth)
     {
-        parent::__construct($pdo);
+        parent::__construct($db_tweets, $db_auth);
         //If a tweet has been added
         if (isset($_GET['action']) && strcmp($_GET['action'],'add')==0) {
             //Send tweet to the db
@@ -18,7 +18,7 @@ class Index extends BaseController
             }
         }
         //Otherwise just get tweets
-        $res = $this->db->get_tweets();
+        $res = $this->db_tweets->get_tweets();
         echo json_encode($res);
     }
     public function sendTweet()
@@ -31,7 +31,7 @@ class Index extends BaseController
             $username = trim($postData->username);
 
             //Sending tweet to the db
-            $this->db->insert_tweet($tweet, $username);
+            $this->db_tweets->insert_tweet($tweet, $username);
         } else{
             print_r($postData);
         }
@@ -43,7 +43,7 @@ class Index extends BaseController
         $id = trim($_GET['id']);
 
         //Deleting tweet from the database
-        $this->db->delete_tweet($id);
+        $this->db_tweets->delete_tweet($id);
         
     }
 }

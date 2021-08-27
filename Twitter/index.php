@@ -15,7 +15,8 @@ define("URL", 'http://localhost/twitter');
 //define("VIEWS", BASEDIR. 'views');
 
 //Including files
-require_once BASEDIR . 'includes'.DS.'Db.php';
+require_once BASEDIR . 'includes'.DS.'Db_tweets.php';
+require_once BASEDIR . 'includes'.DS.'Db_auth.php';
 //require_once BASEDIR. 'includes'.DS.'View.php';
 
 //Routing
@@ -33,17 +34,15 @@ if(!in_array($route, $routes_arr)){
 }
 
 //Creating Db and Template
-$db = new Db();
-
+$db_tweets = new Db_tweets();
+$db_auth = new Db_auth();
 //Creating controller
 $path = BASEDIR . 'controllers'.DS . $route . '.php';
-
 //If file exists, then creating an object
-
 if(file_exists($path)){
     $reqClass = require_once($path);
     $class = ucfirst($route);
-    $controller = new $class($db);
+    $controller = new $class($db_tweets, $db_auth);
 } else{
     exit();
 }
