@@ -1,0 +1,9 @@
+span{
+    display: block;
+    color: rgb(238, 93, 93);
+    background-color: rgb(250, 195, 195);
+    border: 1px rgb(192, 58, 58) solid;
+    height: 1.5em;
+    margin-bottom: 5px;
+    text-align: center;
+}

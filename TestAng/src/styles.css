@@ -26,6 +26,10 @@ body{
     border: 1px black solid;
     height: 18px;
 }
+.authInput.ng-touched.ng-invalid{
+    border: 1px red solid;
+    background-color: rgba(245, 135, 135, 0.548);
+}
 #signUpButton{
     height: 20px;
     background-color: green;

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-
+import { FormBuilder, FormControl, FormGroup, ValidationErrors, Validators } from '@angular/forms';
 @Component({
   selector: 'app-sign-up',
   templateUrl: './sign-up.component.html',
@@ -7,30 +7,38 @@ import { Component, OnInit } from '@angular/core';
 })
 export class SignUpComponent implements OnInit {
 
-  username!:string;
-  email!:string;
-  pass!: string;
 
+  signupForm!: FormGroup;
 
-  constructor() { 
+  constructor( private fb: FormBuilder) { 
 
   }
-  CheckUsername(){
-    if(this.username.length<7){
-      console.log('too short');
-    }
-  }
-  CheckEmail(){
-    if(this.username.length<7){
-      console.log('too short');
-    }
-  }
-  CheckPass(){
-    if(this.username.length<7){
-      console.log('too short');
-    }
-  }
+  
   ngOnInit(): void {
+    this.signupForm = this.fb.group({
+      username: ['', [
+        Validators.required,
+        Validators.minLength(5),
+        Validators.maxLength(25),
+      ]],
+      email: ['',[
+        Validators.required,
+        Validators.email
+      ]],
+      pass: ['',
+        Validators.required,
+        Validators.minLength(6)
+      ]
+    });
   }
 
+  get username() {
+    return this.signupForm.get("username");
+  }
+  get email() {
+    return this.signupForm.get('email');
+  }
+  get pass() {
+    return this.signupForm.get('pass');
+  }
 }

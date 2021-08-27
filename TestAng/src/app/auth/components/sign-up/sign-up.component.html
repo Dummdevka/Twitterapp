@@ -1,12 +1,25 @@
-<div class="signUp authContent">
+<div  class="signUp authContent">
     <app-button [routerLink]="'/login'" [text]="'Log-In'"></app-button>
-    <form class="authForm">
+    <form [formGroup]="signupForm" class="authForm">
         <label for="username" >Your username:</label>
-        <input type="text" id="username" name="username" [(ngModel)]="username" (keyup)="CheckUsername()" class="authInput">
+        <input 
+        type="text" 
+        id="username" 
+        formControlName="username" 
+        class="authInput">
+         <div *ngIf="username!.invalid && (username!.dirty || username!.touched)">
+            <span class="error-mess" *ngIf="username!.errors?.required">Username is required!</span>
+            <span class="error-mess" *ngIf="username!.errors?.minlength">Username is shorter than {{ username!.errors?.minlength.requiredLength }}!</span>
+            <span class="error-mess" *ngIf="username!.errors?.maxlength">Username is shorter than {{ username!.errors?.maxlength.requiredLength }}!</span>
+        </div> 
         <label for="email">Your e-mail:</label>
-        <input type="text" id="email" name="email" [(ngModel)]="email" (keyup)="CheckEmail()" class="authInput">
+        <input type="text" id="email" formControlName="email" class="authInput">
+        <div *ngIf="email!.invalid && (email!.dirty || email!.touched)">
+            <span class="error-mess" *ngIf="email!.errors">Invalid email!</span>
+        </div> 
         <label for="pass">Your password:</label>
-        <input type="text" id="pass" name="pass" [(ngModel)]="pass" (keyup)="CheckPass()" class="authInput">
+        <input type="text" id="pass" formControlName="pass" class="authInput">
         <input type="submit" value="Sign up!" id="signUpButton">
+        Value: {{ signupForm.value | json }}
     </form>
 </div>
