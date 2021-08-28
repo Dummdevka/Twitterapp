@@ -53,8 +53,8 @@ export class SignUpComponent implements OnInit {
         email: email,
         pass:pass
       }
-      this.authService.addUser(user).subscribe((success)=>{
-        console.log("Cool");
+      this.authService.addUser(user).subscribe((response)=>{
+        console.log(response);
       },
       (error)=>{
         console.log(error);

@@ -35,7 +35,30 @@ class Auth extends BaseController{
         }
     }
     public function logIn(){
-        
+        $rawPostData = file_get_contents('php://input');
+        $postData = json_decode($rawPostData);
+
+        if($postData->email && $postData->pass){
+            if(!empty(trim($postData->email))&&!empty(trim($postData->pass))){
+                $this->email = trim($postData->email);
+                $this->pass = trim($postData->pass);
+
+                $loginData = [
+                    'email'=> $this->email,
+                    'pass'=> $this->pass,
+                ];
+
+                $this->db_auth->log_in($loginData);
+            } else {
+                $this->errors['empty'] = true;
+                print_r(json_encode($this->errors));
+                exit();
+            }
+        } else {
+            $this->errors['server'] = true;
+            print_r(json_encode($this->errors));
+            exit();
+        }
     }
     public function validateUsername($data){
         $username = trim($data);
