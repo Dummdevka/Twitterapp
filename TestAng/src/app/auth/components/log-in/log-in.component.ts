@@ -30,12 +30,20 @@ export class LogInComponent implements OnInit {
   }
   onSubmitLogin(email:string, pass:string){
     if(this.loginForm.status==='VALID'){
-      const loginData: User = {
+        const loginData: User = {
         email: email,
         pass: pass
       }
 
-      this.authServuce.logIn(loginData).subscribe((data)=>{console.log(data)});
+      this.authServuce.logIn(loginData).subscribe(
+        res=>{
+          if(res !== null){
+            console.log(res);
+          } else {
+            console.log('Success');
+          }
+        }
+      );
 
       this.loginForm.reset();
     } else{

@@ -21,12 +21,13 @@ export class AuthService {
   
   constructor(private http: HttpClient) { }
 
-  addUser(user:User): Observable <User[]> {
+  addUser(user:User): Observable <string []>{
     const url = `${this.apiUrl}/?page=auth&action=signup`;
-    return this.http.post <User[]>(url,user, httpOptions);
+    return this.http.post <string[]>(url,user, httpOptions);
   }
   logIn(loginData:User): Observable <User[]>{
     const url = `${this.apiUrl}/?page=auth&action=login`;
     return this.http.post <User[]>(url, loginData, httpOptions);
+    
   }
 }

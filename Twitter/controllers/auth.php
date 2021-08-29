@@ -21,11 +21,15 @@ class Auth extends BaseController{
         $rawPostData = file_get_contents('php://input');
 
         $postData = json_decode($rawPostData);
+        
         if($postData->username && $postData->email && $postData->pass){
             $this->validateUsername($postData->username);
             $this->validateEmail($postData->email);
             $this->validatePass($postData->pass);
-
+            if(!empty($this->errors)){
+                print_r(json_encode($this->errors));
+                exit();
+            }
             $newUserData = [
                 'username' => $this->username,
                 'email' => $this->email,
@@ -50,13 +54,13 @@ class Auth extends BaseController{
 
                 $this->db_auth->log_in($loginData);
             } else {
-                $this->errors['empty'] = true;
-                print_r(json_encode($this->errors));
-                exit();
+                $this->errors[] = 'Some fields are empty!';
             }
         } else {
-            $this->errors['server'] = true;
-            print_r(json_encode($this->errors));
+            $this->errors[] = 'Some troubles from the server side!';
+        }
+        if(!empty($this->errors)){
+            print_r($this->errors);
             exit();
         }
     }
@@ -65,7 +69,7 @@ class Auth extends BaseController{
         if(strlen($username)>5&&strlen($username)<25){
             $this->username = $username;
         } else{
-            $this->errors['username']=true;
+            $this->errors[]='Invalid username!';
         }
     }
     public function validateEmail($data){
@@ -73,7 +77,7 @@ class Auth extends BaseController{
         if(filter_var($email, FILTER_VALIDATE_EMAIL)){
             $this->email = $email;
         } else {
-            $this->errors['email'] = true;
+            $this->errors[] = 'Invalid e-mail!';
         }
     }
     public function validatePass($data){
@@ -82,9 +86,7 @@ class Auth extends BaseController{
             $password = password_hash($pass, PASSWORD_DEFAULT);
             $this->pass = $password;
         } else {
-            $this->errors['pass']=true;
-            print_r(json_encode($this->errors));
-            exit();
+            $this->errors[]='Invalid password!';
         }
     }
 }
