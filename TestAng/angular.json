@@ -72,7 +72,8 @@
             },
             "development": {
               "browserTarget": "TestAng:build:development"
-            }
+            },
+            "options": {"port": 80}
           },
           "defaultConfiguration": "development"
         },

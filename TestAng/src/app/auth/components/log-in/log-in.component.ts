@@ -2,6 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { AuthService } from '../../auth.service';
 import { User } from 'src/app/User';
+import { Token } from 'src/app/Token';
+import { HttpErrorResponse } from '@angular/common/http';
+import { Router } from '@angular/router';
 @Component({
   selector: 'app-log-in',
   templateUrl: './log-in.component.html',
@@ -9,7 +12,9 @@ import { User } from 'src/app/User';
 })
 export class LogInComponent implements OnInit {
   loginForm!: FormGroup;
-  constructor(private fb: FormBuilder, private authServuce: AuthService) { }
+  errors!:string;
+  constructor(private fb: FormBuilder, private authServuce: AuthService, private router:Router) {
+   }
 
   ngOnInit(): void {
     this.loginForm = this.fb.group({
@@ -36,13 +41,15 @@ export class LogInComponent implements OnInit {
       }
 
       this.authServuce.logIn(loginData).subscribe(
-        res=>{
-          if(res !== null){
-            console.log(res);
-          } else {
-            console.log('Success');
+        (res: Token)=>{
+          console.log(res.message);
+          localStorage.setItem('token', res.jwt);
+        },
+        err => { if(err instanceof HttpErrorResponse){
+          if(err.status === 422){
+            console.log(err.error);
           }
-        }
+        }}
       );
 
       this.loginForm.reset();

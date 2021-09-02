@@ -6,7 +6,6 @@ class Session{
 
     public function __construct()
     {
-        
     }
 
     static function setSession($sessionData){
@@ -15,10 +14,20 @@ class Session{
 
         $_SESSION['username'] = $username;
         $_SESSION['email'] = $email;
+    
     }
 
     static function unsetSession(){
         session_unset();
         session_destroy();
+    }
+
+    //Check sessions 
+    static function checkSession(){
+        if(isset($_SESSION['username']) && isset($_SESSION['email'])){
+            return true;
+        } else {
+            return false;
+        }
     }
 }

@@ -1,21 +1,30 @@
 <?php
 require_once __DIR__ .DS. 'Base.php';
+require_once BASEDIR . 'includes' . DS . 'Session.php';
 
 class Auth extends BaseController{
     protected $username;
     protected $email;
     protected $pass;
-    public $errors = [];
+    public $errors;
 
     public function __construct($db_tweets, $db_auth)
     {
         parent::__construct($db_tweets, $db_auth);
         if(isset($_GET['action'])&& strcmp($_GET['action'], 'signup')===0){
             $this->signUp();
+            exit();
         }
         if(isset($_GET['action'])&& strcmp($_GET['action'], 'login')===0){
             $this->logIn();
+            exit();
         }
+        $res = Session::checkSession();
+        print_r(json_encode($_COOKIE));
+    }
+    public function setStatus($message){
+        http_response_code(422);
+        print_r(json_encode($message));
     }
     public function signUp(){
         $rawPostData = file_get_contents('php://input');
@@ -27,7 +36,7 @@ class Auth extends BaseController{
             $this->validateEmail($postData->email);
             $this->validatePass($postData->pass);
             if(!empty($this->errors)){
-                print_r(json_encode($this->errors));
+                $this->setStatus(json_encode($this->errors));
                 exit();
             }
             $newUserData = [
@@ -41,7 +50,6 @@ class Auth extends BaseController{
     public function logIn(){
         $rawPostData = file_get_contents('php://input');
         $postData = json_decode($rawPostData);
-
         if($postData->email && $postData->pass){
             if(!empty(trim($postData->email))&&!empty(trim($postData->pass))){
                 $this->email = trim($postData->email);
@@ -53,16 +61,14 @@ class Auth extends BaseController{
                 ];
 
                 $this->db_auth->log_in($loginData);
+                exit();
             } else {
-                $this->errors[] = 'Some fields are empty!';
+                $this->setStatus('Some fields are empty!');
             }
-        } else {
-            $this->errors[] = 'Some troubles from the server side!';
         }
-        if(!empty($this->errors)){
-            print_r($this->errors);
-            exit();
-        }
+
+
+        
     }
     public function validateUsername($data){
         $username = trim($data);

@@ -2,8 +2,9 @@ import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { User } from 'src/app/User';
 import { AuthService } from '../../auth.service';
 import { Observable } from 'rxjs';
-import { Router } from '@angular/router';
+import { NavigationExtras, Router } from '@angular/router';
 import { FormBuilder, FormControl, FormGroup, ValidationErrors, Validators } from '@angular/forms';
+import { HttpErrorResponse } from '@angular/common/http';
 @Component({
   selector: 'app-sign-up',
   templateUrl: './sign-up.component.html',
@@ -13,7 +14,7 @@ export class SignUpComponent implements OnInit {
   UserName: string = "Admin";
   Email:string = "Admin123@gmail.com";
   Pwd:string = "Admin123";
-  errors: string[] = [];
+  errors: [] = [];
   @Output() signUpFunc = new EventEmitter;
   signupForm!: FormGroup;
   constructor( private fb: FormBuilder, private authService: AuthService, private router:Router) { 
@@ -47,7 +48,9 @@ export class SignUpComponent implements OnInit {
   get pass() {
     return this.signupForm.get('pass');
   }
-
+  showErrors(errorsArr: any){
+    console.log(typeof errorsArr)
+  }
   onSignUp(username:string, email:string, pass:string){
     this.errors = [];
     if(this.signupForm.status === 'VALID'){
@@ -57,15 +60,17 @@ export class SignUpComponent implements OnInit {
         pass:pass
       }
       this.authService.addUser(user).subscribe(
-        res => {if(res !== null){
-          res.forEach(err => {
-            this.errors.push(err);
-          });
-        } else{
-          this.router.navigate(['/login']);
-        }
+        (res:User) => {
+          const navigationExtras: NavigationExtras = {state:{data: `Hi, ${res.username}! Please, log in!` }};
+          this.router.navigate(['/login'], navigationExtras);          
         },
-        error => {console.log(error)}
+        err =>{
+          if(err instanceof HttpErrorResponse){
+            if(err.status === 422){
+              console.log(err.error);
+            }
+          }
+        }
       )
       
     } else{
