@@ -14,10 +14,14 @@ import { LogInComponent } from './auth/components/log-in/log-in.component';
 import { ButtonComponent } from './auth/components/button/button.component';
 import { AppRoutingModule } from './app-routing.module';
 import { Routes, RouterModule } from '@angular/router';
+import { AuthService } from './auth/auth.service';
+import { AuthGuard } from './auth.guard';
 
 const routes: Routes = [
   {path: 'tweets', 
-  component: TweetsComponent},
+  component: TweetsComponent,
+  //canActivate: [AuthGuard]
+},
   {path: 'signup',
    component: SignUpComponent},
   {path: '', redirectTo: '/signup', pathMatch: 'full'},
@@ -47,7 +51,7 @@ const routes: Routes = [
       { enableTracing: true } // <-- debugging purposes only
     )
   ],
-  providers: [],
+  providers: [AuthService, AuthGuard],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -1,10 +1,12 @@
 <?php
 require_once __DIR__ .DS. 'Base.php';
-
+require_once "vendor/firebase/php-jwt/src/ExpiredException.php";
+use Firebase\JWT\JWT;
 class Index extends BaseController
 {
     public function __construct($db_tweets, $db_auth)
     {
+        
         parent::__construct($db_tweets, $db_auth);
         //If a tweet has been added
         if (isset($_GET['action']) && strcmp($_GET['action'],'add')==0) {
@@ -17,10 +19,19 @@ class Index extends BaseController
                 $this->deleteTweet();
             }
         }
-        //Otherwise just get tweets
-        $res = $this->db_tweets->get_tweets();
-        echo json_encode($res);
+        if($this->checkToken() !== true){
+            //Set http response
+            http_response_code(403);
+            print_r (json_encode($this->checkToken()));
+
+            exit();
+        } else {
+            print_r("Cool");
+        }
+        //Prevent loading if invalid token
+       
     }
+    
     public function sendTweet()
     {
         $rawPostData = file_get_contents('php://input');

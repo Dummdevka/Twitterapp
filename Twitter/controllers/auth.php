@@ -1,7 +1,7 @@
 <?php
 require_once __DIR__ .DS. 'Base.php';
 require_once BASEDIR . 'includes' . DS . 'Session.php';
-
+use Firebase\JWT\JWT;
 class Auth extends BaseController{
     protected $username;
     protected $email;
@@ -19,8 +19,6 @@ class Auth extends BaseController{
             $this->logIn();
             exit();
         }
-        $res = Session::checkSession();
-        print_r(json_encode($_COOKIE));
     }
     public function setStatus($message){
         http_response_code(422);
@@ -36,7 +34,7 @@ class Auth extends BaseController{
             $this->validateEmail($postData->email);
             $this->validatePass($postData->pass);
             if(!empty($this->errors)){
-                $this->setStatus(json_encode($this->errors));
+                $this->setStatus($this->errors);
                 exit();
             }
             $newUserData = [
@@ -60,15 +58,58 @@ class Auth extends BaseController{
                     'pass'=> $this->pass,
                 ];
 
-                $this->db_auth->log_in($loginData);
+                $user = $this->db_auth->log_in($loginData);
+                $this->setAccessJwt($user);
+                $this->setRefreshJwt();
                 exit();
             } else {
                 $this->setStatus('Some fields are empty!');
             }
         }
+    }
+    public function setAccessJwt(array $user){
+        $issuer_claim = "http://localhost"; // this can be the servername
+        $audience_claim = "http://localhost";
+        $issuedat_claim = time(); // issued at
+        $notbefore_claim = $issuedat_claim + 10; //not before in seconds
+        $expire_claim = $issuedat_claim + 3600; // expire time in seconds
+        $access_token = array(
+            "iss" => $issuer_claim,
+            "aud" => $audience_claim,
+            "iat" => $issuedat_claim,
+            "nbf" => $notbefore_claim,
+            "exp" => $expire_claim,
+            "data" => array(
+                "id" => $user['id'],
+                "username" => $user['username']
+            )
+        );
+        $jwt = JWT::encode($access_token, $this->key);
+        echo json_encode(
+            array(
+                "message" => "Successful login.",
+                "jwt" => $jwt,
+                "expireAt" => $expire_claim,
+            )
+        );
+    }
+    public function setRefreshJwt(){
+        $issuer_claim = "http://localhost"; // this can be the servername
+        $audience_claim = "http://localhost";
+        $issuedat_claim = time(); // issued at
+        $notbefore_claim = $issuedat_claim + 1; //not before in seconds
+        $refresh_token = array(
+            "iss" => $issuer_claim,
+            "aud" => $audience_claim,
+            "iat" => $issuedat_claim,
+            "nbf" => $notbefore_claim,
+            "data" => [
+                "user" => "user"
+            ]
+        );
+        $jwtRefresh = JWT::encode($refresh_token, $this->refresh);
+        print_r( $jwtRefresh);
 
-
-        
     }
     public function validateUsername($data){
         $username = trim($data);

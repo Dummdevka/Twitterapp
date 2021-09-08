@@ -1,7 +1,9 @@
 <?php
 include_once __DIR__ . DS . 'Session.php';
 include_once __DIR__ . DS . 'Db.php';
+
 use Firebase\JWT\JWT;
+
 class Db_auth extends Db
 {
     public function __construct()
@@ -48,36 +50,7 @@ class Db_auth extends Db
         if ($stmt->rowCount() > 0) {
             $user = $stmt->fetch();
             if (password_verify($pass, $user['password'])) {
-
-                //Set session
-                //Session::setSession($user);
-                $secret_key = "D91303F61B40A52C1E8E060A93E59944CC6E3D4F8D50C6795F45DB209736E03E";
-                $issuer_claim = "http://localhost"; // this can be the servername
-                $audience_claim = "http://localhost";
-                $issuedat_claim = time(); // issued at
-                $notbefore_claim = $issuedat_claim + 10; //not before in seconds
-                $expire_claim = $issuedat_claim + 360; // expire time in seconds
-                $token = array(
-                    "iss" => $issuer_claim,
-                    "aud" => $audience_claim,
-                    "iat" => $issuedat_claim,
-                    "nbf" => $notbefore_claim,
-                    "exp" => $expire_claim,
-                    "data" => array(
-                        "id" => $user['id'],
-                        "username" => $user['username']
-                    )
-                );
-                $jwt = JWT::encode($token, $secret_key);
-                echo json_encode(
-                    array(
-                        "message" => "Successful login.",
-                        "jwt" => $jwt,
-                        "expireAt" => $expire_claim
-                    )
-                );
-                //Returning user that is logged in
-                //print_r(json_encode($user));
+                return $user;
                 exit();
             } else {
                 http_response_code(422);

@@ -13,13 +13,13 @@ const httpOptions = {
     'Access-Control-Allow-Methods': '*'
   })
 }
-
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
   apiUrl:string = "http://localhost/twitterapp/Twitter";
-  
+  token: boolean = false;
+  status: string = 'guest';
   constructor(private http: HttpClient) { }
   addUser(user:User): Observable <User>{
     const url = `${this.apiUrl}/?page=auth&action=signup`;
@@ -28,6 +28,12 @@ export class AuthService {
   logIn(loginData:User): Observable <Token>{
     const url = `${this.apiUrl}/?page=auth&action=login`;
     return this.http.post <Token>(url, loginData, httpOptions);
-    
+  }
+  checkAllow(){
+    this.token = !!localStorage.getItem('token');
+    if ( this.token ){
+      this.status = 'auth';
+    }
+    return this.status;
   }
 }

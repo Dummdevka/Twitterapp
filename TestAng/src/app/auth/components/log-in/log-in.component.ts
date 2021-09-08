@@ -42,8 +42,12 @@ export class LogInComponent implements OnInit {
 
       this.authServuce.logIn(loginData).subscribe(
         (res: Token)=>{
+          if(res === null){
+            console.log('No token received by Angular');
+          }
           console.log(res.message);
           localStorage.setItem('token', res.jwt);
+          //this.router.navigate(['/tweets']);
         },
         err => { if(err instanceof HttpErrorResponse){
           if(err.status === 422){

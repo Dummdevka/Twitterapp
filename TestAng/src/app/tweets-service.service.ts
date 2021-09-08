@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
 import { HttpInterceptor } from '@angular/common/http';
 import { HashLocationStrategy } from '@angular/common';
 import { Tweet } from './Tweet';
-
+import { Token } from './Token';
 const httpOptions = {
   headers: new HttpHeaders({
     'Content-Type': 'application/json',
@@ -14,6 +14,13 @@ const httpOptions = {
     'Access-Control-Allow-Methods': '*'
   })
 };
+const token = localStorage.getItem('token');
+const httpAuthHeader = {
+  headers: new HttpHeaders
+  ({
+  'Authorization': `Bearer ${token}`
+})
+}
 @Injectable({
   providedIn: 'root'
 })
@@ -24,7 +31,7 @@ export class TestServiceService {
   }
   getTweets():Observable<Tweet[]>{
   const url = `${this.apiUrl}/?page=index`;
-  return this.http.get<Tweet[]>(url);
+  return this.http.get<Tweet[]>(url,httpAuthHeader);
   }
 
   postTweet(tweet:Tweet):Observable<Tweet[]>{
