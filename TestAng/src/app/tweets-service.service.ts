@@ -19,7 +19,8 @@ const httpAuthHeader = {
   headers: new HttpHeaders
   ({
   'Authorization': `Bearer ${token}`
-})
+}),
+  withCredentials: true
 }
 @Injectable({
   providedIn: 'root'

@@ -11,6 +11,8 @@ import { Router } from '@angular/router';
   styleUrls: ['./log-in.component.css']
 })
 export class LogInComponent implements OnInit {
+  e_mail:string = "Admin123@gmail.com";
+  pwd:string = "Admin123";
   loginForm!: FormGroup;
   errors!:string;
   constructor(private fb: FormBuilder, private authServuce: AuthService, private router:Router) {
@@ -46,8 +48,9 @@ export class LogInComponent implements OnInit {
             console.log('No token received by Angular');
           }
           console.log(res.message);
+          //Storing JWT to the localstorage(Refresh token is stored in the httpOnly)
           localStorage.setItem('token', res.jwt);
-          //this.router.navigate(['/tweets']);
+          this.router.navigate(['/tweets']);
         },
         err => { if(err instanceof HttpErrorResponse){
           if(err.status === 422){

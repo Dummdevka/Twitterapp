@@ -1,11 +1,12 @@
 <?php
-session_start();
-header('Access-Control-Allow-Origin: *');
-header('Access-Control-Allow-Headers: *');
-header('Access-Control-Allow-Methods: *');
+header('Access-Control-Allow-Origin: http://localhost:4200');
+header('Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Origin, Authorization');
+//header('Access-Control-Allow-Methods: *');
+header('Access-Control-Allow-Credentials: true');
 require_once "vendor/autoload.php";
 use \Firebase\JWT\JWT;
 //Errors
+//ini_set('session.cookie_httponly', 1);
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);

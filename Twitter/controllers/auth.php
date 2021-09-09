@@ -61,6 +61,7 @@ class Auth extends BaseController{
                 $user = $this->db_auth->log_in($loginData);
                 $this->setAccessJwt($user);
                 $this->setRefreshJwt();
+                print_r(json_encode($_COOKIE));
                 exit();
             } else {
                 $this->setStatus('Some fields are empty!');
@@ -107,8 +108,16 @@ class Auth extends BaseController{
                 "user" => "user"
             ]
         );
-        $jwtRefresh = JWT::encode($refresh_token, $this->refresh);
-        print_r( $jwtRefresh);
+        try{
+            //Creating a refresh token
+            $jwtRefresh = JWT::encode($refresh_token, $this->refresh);
+            //Storing it to the httpOnly
+            setcookie("refresh", $jwtRefresh, time()+3600, '/', '' ,false, true);
+        } catch (Exception $e){
+            print_r("Error:".$e->getMessage());
+            exit();
+        }
+        //
 
     }
     public function validateUsername($data){

@@ -7,11 +7,12 @@ import { HttpHeaders } from '@angular/common/http';
 
 const httpOptions = {
   headers: new HttpHeaders({
+    'Access-Control-Allow-Origin': 'http://localhost:4200',
     'Content-Type': 'application/json',
-    'Access-Control-Allow-Origin': '*',
-    'Access-Control-Allow-Headers': '*',
-    'Access-Control-Allow-Methods': '*'
-  })
+    //'Access-Control-Allow-Headers': '*',
+    //'Access-Control-Allow-Methods': '*'
+  }),
+  withCredentials: true
 }
 @Injectable({
   providedIn: 'root'

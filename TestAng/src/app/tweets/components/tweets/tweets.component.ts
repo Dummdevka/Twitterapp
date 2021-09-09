@@ -17,10 +17,11 @@ export class TweetsComponent implements OnInit {
       this.tweets=tweets},
       err=>{
         if(err instanceof HttpErrorResponse){
-          if(err.status === 403){
+          if(err.status === 0){
             //Why err.status == 0???
             //Not authorized users can not access tweets
-            this.router.navigate(['/signup']);
+            console.log(err.message);
+            //this.router.navigate(['/signup']);
           }
         }
       });

@@ -19,14 +19,14 @@ class Index extends BaseController
                 $this->deleteTweet();
             }
         }
-        if($this->checkToken() !== true){
+        if($this->checkToken()!== false){
             //Set http response
-            http_response_code(403);
-            print_r (json_encode($this->checkToken()));
+            var_dump (json_encode($this->checkToken()));
 
             exit();
         } else {
-            print_r("Cool");
+            //http_response_code(403);
+            print_r($this->checkToken());
         }
         //Prevent loading if invalid token
        
