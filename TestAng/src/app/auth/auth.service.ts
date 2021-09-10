@@ -7,7 +7,7 @@ import { HttpHeaders } from '@angular/common/http';
 
 const httpOptions = {
   headers: new HttpHeaders({
-    'Access-Control-Allow-Origin': 'http://localhost:4200',
+    //'Access-Control-Allow-Origin': 'http://localhost:4200',
     'Content-Type': 'application/json',
     //'Access-Control-Allow-Headers': '*',
     //'Access-Control-Allow-Methods': '*'
@@ -30,11 +30,8 @@ export class AuthService {
     const url = `${this.apiUrl}/?page=auth&action=login`;
     return this.http.post <Token>(url, loginData, httpOptions);
   }
-  checkAllow(){
-    this.token = !!localStorage.getItem('token');
-    if ( this.token ){
-      this.status = 'auth';
-    }
-    return this.status;
+  refreshToken(): Observable <Token>{
+    const url = `${this.apiUrl}/?page=auth&action=refresh`;
+    return this.http.get <Token> (url, httpOptions);
   }
 }

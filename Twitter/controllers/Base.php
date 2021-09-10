@@ -4,7 +4,7 @@ abstract class BaseController
 {
     public $db_tweets;
     public $db_auth;
-    public $username;
+    public $user;
     public $id;
     protected $refresh = "iW0TdKav8l8GSEVg5FrL47A22qDqtUQy";
     protected $key = "D91303F61B40A52C1E8E060A93E59944CC6E3D4F8D50C6795F45DB209736E03E";
@@ -25,8 +25,8 @@ abstract class BaseController
                 $jwt = str_replace('Bearer ', '', $token);
                 // print_r($jwt);
                 $decoded = JWT::decode($jwt, $this->key, array('HS256'));
-                $this->username = $decoded->data['username'];
-                $this->id = $decoded->data['id'];
+                $this->user = $decoded->data->username;
+                $this->id = $decoded->data->id;
                 return true;
 
             } catch( Exception $e){
@@ -38,15 +38,17 @@ abstract class BaseController
                         return $_COOKIE;
                         exit();
                     } else{
-                        $refresh = $_COOKIE['refresh'];
-                        //Packing all the data for a new access token
-                        $user = [
-                            'user'=>$this->username,
-                            'id'=> $this->id
-                        ];
-                        //Make requesto to get a new acces token(send username and id)
-                        
-                        //Receive the token and store it again
+                        return false;
+                        exit();
+                        // $refresh = $_COOKIE['refresh'];
+                        // //Packing all the data for a new access token
+                        // $user = [
+                        //     'user'=>$this->user,
+                        //     'id'=> $this->id
+                        // ];
+                        // //Make requesto to get a new acces token(send username and id)
+                        // return $user;
+                        // //Receive the token and store it again
                     }
                     
                 } else{

@@ -43,12 +43,11 @@ export class LogInComponent implements OnInit {
       }
 
       this.authServuce.logIn(loginData).subscribe(
-        (res: Token)=>{
+        res =>{
+          //sconsole.log(res);
           if(res === null){
             console.log('No token received by Angular');
           }
-          console.log(res.message);
-          //Storing JWT to the localstorage(Refresh token is stored in the httpOnly)
           localStorage.setItem('token', res.jwt);
           this.router.navigate(['/tweets']);
         },

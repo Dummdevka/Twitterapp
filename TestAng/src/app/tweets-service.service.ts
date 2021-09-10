@@ -12,7 +12,8 @@ const httpOptions = {
     'Access-Control-Allow-Origin': '*',
     'Access-Control-Allow-Headers': '*',
     'Access-Control-Allow-Methods': '*'
-  })
+  }),
+  withCredentials: true
 };
 const token = localStorage.getItem('token');
 const httpAuthHeader = {
@@ -43,5 +44,9 @@ export class TestServiceService {
   removeTweet(tweet:Tweet){
     const url = `${this.apiUrl}/?action=delete&id=${tweet.id}`;
     return this.http.get<Tweet[]>(url);
+  }
+  refreshToken(): Observable <Token>{
+    const url = `${this.apiUrl}/?page=auth&action=refresh`;
+    return this.http.get <Token> (url, httpOptions);
   }
 }

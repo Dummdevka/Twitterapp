@@ -13,6 +13,14 @@ export class TweetsComponent implements OnInit {
   
   constructor(private tweetService:TestServiceService, private router: Router) {
     this.tweetService.getTweets().subscribe(tweets=>{
+      if(!tweets){
+        this.tweetService.refreshToken().subscribe(
+          res=>{
+            localStorage.setItem('token', res.jwt);
+          }
+        );
+
+      }
       console.log("Got the tweets");
       this.tweets=tweets},
       err=>{

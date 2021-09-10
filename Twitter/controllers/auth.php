@@ -19,6 +19,10 @@ class Auth extends BaseController{
             $this->logIn();
             exit();
         }
+        if(isset($_GET['action'])&& strcmp($_GET['action'], 'refresh')===0){
+            $this->getNewAccess();
+            exit();
+        }
     }
     public function setStatus($message){
         http_response_code(422);
@@ -59,9 +63,10 @@ class Auth extends BaseController{
                 ];
 
                 $user = $this->db_auth->log_in($loginData);
+                //LocalStorage
                 $this->setAccessJwt($user);
+                //httpOnly cookie
                 $this->setRefreshJwt();
-                print_r(json_encode($_COOKIE));
                 exit();
             } else {
                 $this->setStatus('Some fields are empty!');
@@ -73,7 +78,7 @@ class Auth extends BaseController{
         $audience_claim = "http://localhost";
         $issuedat_claim = time(); // issued at
         $notbefore_claim = $issuedat_claim + 10; //not before in seconds
-        $expire_claim = $issuedat_claim + 3600; // expire time in seconds
+        $expire_claim = $issuedat_claim + 60; // expire time in seconds
         $access_token = array(
             "iss" => $issuer_claim,
             "aud" => $audience_claim,
@@ -119,6 +124,19 @@ class Auth extends BaseController{
         }
         //
 
+    }
+    public function getNewAccess(){
+        $refresh_token = $_COOKIE['refresh'];
+            try{
+                $decoded = JWT::decode($refresh_token, $this->refresh, array('HS256'));
+                $user = [
+                    'username'=>'Admin',
+                    'id'=>20
+                ];
+                $this->setAccessJwt($user);
+            } catch( Exception $e){
+                print_r(json_encode($e->getMessage()));
+            }
     }
     public function validateUsername($data){
         $username = trim($data);
