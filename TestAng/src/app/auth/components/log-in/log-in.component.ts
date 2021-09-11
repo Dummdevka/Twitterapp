@@ -48,6 +48,7 @@ export class LogInComponent implements OnInit {
           if(res === null){
             console.log('No token received by Angular');
           }
+          console.log(res);
           localStorage.setItem('token', res.jwt);
           this.router.navigate(['/tweets']);
         },

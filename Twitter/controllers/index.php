@@ -9,6 +9,7 @@ class Index extends BaseController
         
         parent::__construct($db_tweets, $db_auth);
         //If a tweet has been added
+        
         if (isset($_GET['action']) && strcmp($_GET['action'],'add')==0) {
             //Send tweet to the db
             
@@ -19,16 +20,18 @@ class Index extends BaseController
                 $this->deleteTweet();
             }
         }
-        if($this->checkToken()!== false){
-            //Show tweets
-            print_r(json_encode($this->db_tweets->get_tweets()));
-            //print_r(json_encode($this->checkToken()));
-            exit();
-        } else {
-            //http_response_code(403);
-            print_r(json_encode($this->checkToken()));
-            exit();
-        }
+        print_r(json_encode($this->db_tweets->get_tweets()));
+        //var_dump($this->checkToken());
+        // if($this->checkToken()=== true){
+        //     //Show tweets
+        //     //print_r(json_encode($this->checkToken()));
+        //     exit();
+        // } else {
+        //     //http_response_code(403);
+            
+        //     print_r(json_encode($this->checkToken()));
+        //     exit();
+        // }
         //Prevent loading if invalid token
        
     }

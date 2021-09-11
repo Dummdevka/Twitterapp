@@ -19,6 +19,10 @@ const token = localStorage.getItem('token');
 const httpAuthHeader = {
   headers: new HttpHeaders
   ({
+    'Content-Type': 'application/json',
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Headers': '*',
+    'Access-Control-Allow-Methods': '*',
   'Authorization': `Bearer ${token}`
 }),
   withCredentials: true
@@ -30,6 +34,10 @@ export class TestServiceService {
   private apiUrl = 'http://localhost/twitterapp/Twitter';
   constructor( private http:HttpClient) { 
 
+  }
+  checkAllow(): Observable <Token>{
+    const url = `${this.apiUrl}/?page=index&action=checkToken`;
+    return this.http.get<Token>(url,httpAuthHeader);
   }
   getTweets():Observable<Tweet[]>{
   const url = `${this.apiUrl}/?page=index`;
@@ -47,6 +55,7 @@ export class TestServiceService {
   }
   refreshToken(): Observable <Token>{
     const url = `${this.apiUrl}/?page=auth&action=refresh`;
-    return this.http.get <Token> (url, httpOptions);
+    console.log(token);
+    return this.http.get <Token> (url, httpAuthHeader);
   }
 }

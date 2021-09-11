@@ -20,8 +20,12 @@ class Auth extends BaseController{
             exit();
         }
         if(isset($_GET['action'])&& strcmp($_GET['action'], 'refresh')===0){
+            if($this->checkToken()===false){
             $this->getNewAccess();
             exit();
+            } else {
+                print_r(json_encode(false));
+            }
         }
     }
     public function setStatus($message){
@@ -77,8 +81,8 @@ class Auth extends BaseController{
         $issuer_claim = "http://localhost"; // this can be the servername
         $audience_claim = "http://localhost";
         $issuedat_claim = time(); // issued at
-        $notbefore_claim = $issuedat_claim + 10; //not before in seconds
-        $expire_claim = $issuedat_claim + 60; // expire time in seconds
+        $notbefore_claim = $issuedat_claim + 1; //not before in seconds
+        $expire_claim = $issuedat_claim + 10; // expire time in seconds
         $access_token = array(
             "iss" => $issuer_claim,
             "aud" => $audience_claim,
@@ -95,7 +99,7 @@ class Auth extends BaseController{
             array(
                 "message" => "Successful login.",
                 "jwt" => $jwt,
-                "expireAt" => $expire_claim,
+                "expire_at" => $expire_claim,
             )
         );
     }
@@ -103,7 +107,7 @@ class Auth extends BaseController{
         $issuer_claim = "http://localhost"; // this can be the servername
         $audience_claim = "http://localhost";
         $issuedat_claim = time(); // issued at
-        $notbefore_claim = $issuedat_claim + 1; //not before in seconds
+        $notbefore_claim = $issuedat_claim + 0; //not before in seconds
         $refresh_token = array(
             "iss" => $issuer_claim,
             "aud" => $audience_claim,
@@ -126,14 +130,25 @@ class Auth extends BaseController{
 
     }
     public function getNewAccess(){
-        $refresh_token = $_COOKIE['refresh'];
+        if(isset($_COOKIE['refresh'])&& (!empty(trim($_COOKIE['refresh'])))){
+            $refresh_token = $_COOKIE['refresh'];
+
+        } else{
+            echo 'logout';
+            exit();
+        }
+        
             try{
+                //print_r(json_encode("here"));
                 $decoded = JWT::decode($refresh_token, $this->refresh, array('HS256'));
                 $user = [
                     'username'=>'Admin',
                     'id'=>20
                 ];
                 $this->setAccessJwt($user);
+                //$tweets = $this->db_tweets->get_tweets();
+                
+                //$tweets = $this->db
             } catch( Exception $e){
                 print_r(json_encode($e->getMessage()));
             }

@@ -10,18 +10,25 @@ import { TestServiceService } from 'src/app/tweets-service.service';
 })
 export class TweetsComponent implements OnInit {
   tweets!:Tweet[];
+  valid: boolean = false;
   
   constructor(private tweetService:TestServiceService, private router: Router) {
-    this.tweetService.getTweets().subscribe(tweets=>{
-      if(!tweets){
-        this.tweetService.refreshToken().subscribe(
-          res=>{
+    this.tweetService.refreshToken().subscribe(
+        res => {
+          if(res){
+            console.log(res.jwt);
             localStorage.setItem('token', res.jwt);
           }
-        );
+          if(!res){
+            console.log('valid');
+          }
+          
 
-      }
-      console.log("Got the tweets");
+        }
+      );
+    this.tweetService.getTweets().subscribe(tweets=>{
+      //console.log(this.tweets);
+      console.log(tweets);
       this.tweets=tweets},
       err=>{
         if(err instanceof HttpErrorResponse){
@@ -36,7 +43,25 @@ export class TweetsComponent implements OnInit {
    }
 
   ngOnInit(): void {
-    
+    // 
+    // this.tweetService.checkAllow().subscribe(res=>
+    //   {
+    //     //console.log(res);
+    //     //If the token has expired then refresh it
+    //     if(!res){
+    //       this.tweetService.refreshToken().subscribe(
+    //         result=>{
+    //           //Setting the token in local Storage
+    //           localStorage.setItem('token', result.jwt);
+    //           console.log(result.expire_at);
+              
+    //         }
+    //       );
+    //     }
+    //     if(res){
+    //       console.log(res);
+    //     }
+    //   });
 }
 addTweet(newTweet:Tweet){
   this.tweetService.postTweet(newTweet).subscribe((tweets:Tweet[])=>{this.tweets = tweets});

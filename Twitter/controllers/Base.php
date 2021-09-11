@@ -12,22 +12,31 @@ abstract class BaseController
     {
         $this->db_tweets = $db_tweets;
         $this->db_auth = $db_auth;
+        // if(isset($_GET['action'])&& strcmp($_GET['action'], 'checkToken')==0){
+        //     //echo json_encode("here");
+        //     $this->checkToken();
+        //     exit();
+        // }
     }
     public function checkToken(){
         $headers = apache_request_headers();
+        //print_r(json_encode($headers));
         if(!isset($headers['Authorization'])){
             //http_response_code(403);
             print_r(json_encode("JWT token is missing, please log in!"));
             return false;
         } else{
             try{
+
                 $token = $headers['Authorization'];
                 $jwt = str_replace('Bearer ', '', $token);
                 // print_r($jwt);
                 $decoded = JWT::decode($jwt, $this->key, array('HS256'));
                 $this->user = $decoded->data->username;
                 $this->id = $decoded->data->id;
+
                 return true;
+                exit();
 
             } catch( Exception $e){
                 //Checking if the token is expired
@@ -38,20 +47,14 @@ abstract class BaseController
                         return $_COOKIE;
                         exit();
                     } else{
+
                         return false;
+                        
                         exit();
-                        // $refresh = $_COOKIE['refresh'];
-                        // //Packing all the data for a new access token
-                        // $user = [
-                        //     'user'=>$this->user,
-                        //     'id'=> $this->id
-                        // ];
-                        // //Make requesto to get a new acces token(send username and id)
-                        // return $user;
-                        // //Receive the token and store it again
                     }
                     
                 } else{
+                    print_r(json_encode($jwt));
                     return "Error:" . $e->getMessage();
                 }
             }

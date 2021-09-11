@@ -34,4 +34,11 @@ export class AuthService {
     const url = `${this.apiUrl}/?page=auth&action=refresh`;
     return this.http.get <Token> (url, httpOptions);
   }
+  checkAllow(){
+    if(localStorage.getItem('token')){
+      return true;
+    } else {
+      return false;
+    }
+  }
 }

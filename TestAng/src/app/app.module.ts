@@ -20,7 +20,7 @@ import { AuthGuard } from './auth.guard';
 const routes: Routes = [
   {path: 'tweets', 
   component: TweetsComponent,
-  //canActivate: [AuthGuard]
+  canActivate: [AuthGuard]
 },
   {path: 'signup',
    component: SignUpComponent},
