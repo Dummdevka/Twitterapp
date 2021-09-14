@@ -27,6 +27,10 @@ class Auth extends BaseController{
                 print_r(json_encode(false));
             }
         }
+        if(isset($_GET['action'])&& strcmp($_GET['action'], 'clear')===0){
+            $this->clearCookie();
+            exit();
+        }
     }
     public function setStatus($message){
         http_response_code(422);
@@ -50,7 +54,8 @@ class Auth extends BaseController{
                 'email' => $this->email,
                 'pass' => $this->pass
             ];
-            $this->db_auth->addUser($newUserData);
+            $data = $this->db_auth->addUser($newUserData);
+            //Create tokens and send them back
         }
     }
     public function logIn(){
@@ -68,9 +73,11 @@ class Auth extends BaseController{
 
                 $user = $this->db_auth->log_in($loginData);
                 //LocalStorage
+                // print_r($user);
+                // exit();
                 $this->setAccessJwt($user);
                 //httpOnly cookie
-                $this->setRefreshJwt();
+                $this->setRefreshJwt($user);
                 exit();
             } else {
                 $this->setStatus('Some fields are empty!');
@@ -103,7 +110,7 @@ class Auth extends BaseController{
             )
         );
     }
-    public function setRefreshJwt(){
+    public function setRefreshJwt(array $user){
         $issuer_claim = "http://localhost"; // this can be the servername
         $audience_claim = "http://localhost";
         $issuedat_claim = time(); // issued at
@@ -114,7 +121,8 @@ class Auth extends BaseController{
             "iat" => $issuedat_claim,
             "nbf" => $notbefore_claim,
             "data" => [
-                "user" => "user"
+                "username" => $user['username'],
+                "id"=>$user['id']
             ]
         );
         try{
@@ -134,24 +142,29 @@ class Auth extends BaseController{
             $refresh_token = $_COOKIE['refresh'];
 
         } else{
-            echo 'logout';
             exit();
         }
         
             try{
                 //print_r(json_encode("here"));
                 $decoded = JWT::decode($refresh_token, $this->refresh, array('HS256'));
-                $user = [
-                    'username'=>'Admin',
-                    'id'=>20
-                ];
-                $this->setAccessJwt($user);
-                //$tweets = $this->db_tweets->get_tweets();
-                
-                //$tweets = $this->db
+                $user = (array) $decoded->data;
+                $this->setAccessJwt($user);                
             } catch( Exception $e){
                 print_r(json_encode($e->getMessage()));
             }
+    }
+    public function clearCookie(){
+        if(isset($_COOKIE['refresh'])){
+            
+            //Remove the cookie
+            unset($_COOKIE['refresh']);
+            setcookie('refresh', null, -1, '/');
+            echo json_encode(true);
+            exit();
+        } else{
+            echo json_encode(false);
+        }
     }
     public function validateUsername($data){
         $username = trim($data);

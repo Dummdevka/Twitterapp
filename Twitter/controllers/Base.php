@@ -58,10 +58,6 @@ abstract class BaseController
                     return "Error:" . $e->getMessage();
                 }
             }
-            
-
-            //Validate the token
-            //Return true if its valid
         }
     }
 }

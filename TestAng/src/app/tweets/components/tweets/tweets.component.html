@@ -1,4 +1,4 @@
-<a [routerLink]="'/signup'" >Sign Up</a>
+<button (click)="onLogOut()" id="signUpButton">Log out</button>
 <app-add-tweets (onAddTweet)="addTweet($event)"></app-add-tweets>
 <div class="tweets-feed">
     <app-tweet-item *ngFor="let tweet of tweets" [tweet]="tweet" (onDeleteTweet)="deleteTweet($event)"></app-tweet-item>

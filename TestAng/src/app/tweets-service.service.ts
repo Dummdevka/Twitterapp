@@ -55,7 +55,10 @@ export class TestServiceService {
   }
   refreshToken(): Observable <Token>{
     const url = `${this.apiUrl}/?page=auth&action=refresh`;
-    console.log(token);
     return this.http.get <Token> (url, httpAuthHeader);
+  }
+  clearRefresh(): Observable <boolean>{
+    const url = `${this.apiUrl}/?page=auth&action=clear`;
+    return this.http.get <boolean> (url, httpAuthHeader);
   }
 }

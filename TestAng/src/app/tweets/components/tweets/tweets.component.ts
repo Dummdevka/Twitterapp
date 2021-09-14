@@ -36,11 +36,27 @@ export class TweetsComponent implements OnInit {
             //Why err.status == 0???
             //Not authorized users can not access tweets
             console.log(err.message);
-            //this.router.navigate(['/signup']);
+            this.router.navigate(['/signup']);
           }
         }
       });
    }
+   onLogOut(){
+    //Clean localStorage
+    localStorage.clear();
+    //Clean cookie
+    this.tweetService.clearRefresh().subscribe(
+      res=>{
+        if(!res){
+          console.log('You should change your password');
+          this.router.navigate(['/login']);
+        } 
+        else{
+          this.router.navigate(['/login']);
+        }
+      }
+    );
+  }
 
   ngOnInit(): void {
     // 
@@ -69,5 +85,6 @@ addTweet(newTweet:Tweet){
 deleteTweet(tweet:Tweet){
   this.tweetService.removeTweet(tweet).subscribe((tweets:Tweet[])=>{this.tweets = tweets});
 }
+
 
 }

@@ -21,18 +21,6 @@ class Index extends BaseController
             }
         }
         print_r(json_encode($this->db_tweets->get_tweets()));
-        //var_dump($this->checkToken());
-        // if($this->checkToken()=== true){
-        //     //Show tweets
-        //     //print_r(json_encode($this->checkToken()));
-        //     exit();
-        // } else {
-        //     //http_response_code(403);
-            
-        //     print_r(json_encode($this->checkToken()));
-        //     exit();
-        // }
-        //Prevent loading if invalid token
        
     }
     

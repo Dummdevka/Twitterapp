@@ -61,6 +61,7 @@ export class SignUpComponent implements OnInit {
       }
       this.authService.addUser(user).subscribe(
         (res:User) => {
+          console.log(res);
           const navigationExtras: NavigationExtras = {state:{data: `Hi, ${res.username}! Please, log in!` }};
           this.router.navigate(['/login'], navigationExtras);          
         },

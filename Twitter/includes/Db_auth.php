@@ -13,8 +13,8 @@ class Db_auth extends Db
 
     public function addUser($userData)
     {
-
-        $email = $userData['email'];
+        try{
+            $email = $userData['email'];
         $pass = $userData['pass'];
         $username = $userData['username'];
         //Check if the user exists
@@ -34,7 +34,12 @@ class Db_auth extends Db
         $pdo = $this->connect();
         $stmt = $pdo->prepare($sql);
         $stmt->execute([':username' => $username, ':email' => $email, ':pass' => $pass]);
-        print_r(json_encode($userData));
+        print_r(json_encode( $userData));
+        } catch( Exception $e){
+            print_r(json_encode($e->getMessage()));
+            exit();
+        }
+        
     }
 
     public function log_in($userData)
