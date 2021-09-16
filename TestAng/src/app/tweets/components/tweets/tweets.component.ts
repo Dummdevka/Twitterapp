@@ -2,6 +2,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { Tweet } from 'src/app/Tweet';
 import { Router } from '@angular/router';
+import jwt_decode, {JwtPayload,JwtDecodeOptions,JwtHeader} from "jwt-decode";
 import { TestServiceService } from 'src/app/tweets-service.service';
 @Component({
   selector: 'app-tweets',
@@ -10,14 +11,14 @@ import { TestServiceService } from 'src/app/tweets-service.service';
 })
 export class TweetsComponent implements OnInit {
   tweets!:Tweet[];
-  valid: boolean = false;
-  
+  username!:string;
+  showAll = true;
   constructor(private tweetService:TestServiceService, private router: Router) {
     this.tweetService.refreshToken().subscribe(
         res => {
           if(res){
-            console.log(res.jwt);
-            localStorage.setItem('token', res.jwt);
+              localStorage.setItem('token', res.jwt);
+            
           }
           if(!res){
             console.log('valid');
@@ -26,9 +27,13 @@ export class TweetsComponent implements OnInit {
 
         }
       );
+    
+      this.getTweets();
+      this.getUsername();
+   }
+   getTweets(){
     this.tweetService.getTweets().subscribe(tweets=>{
-      //console.log(this.tweets);
-      console.log(tweets);
+      
       this.tweets=tweets},
       err=>{
         if(err instanceof HttpErrorResponse){
@@ -57,34 +62,49 @@ export class TweetsComponent implements OnInit {
       }
     );
   }
+  myProfile(){
+    
+  }
+  getUsername(this: any){
+    try{
+      const token = localStorage.getItem('token');
+      const payload: any = jwt_decode(token!);
+      this.username = payload.data['username'];
+    } catch(error){
+      console.log(error);
+      this.router.navigate(['/login']);
+    }
 
+  }
   ngOnInit(): void {
-    // 
-    // this.tweetService.checkAllow().subscribe(res=>
-    //   {
-    //     //console.log(res);
-    //     //If the token has expired then refresh it
-    //     if(!res){
-    //       this.tweetService.refreshToken().subscribe(
-    //         result=>{
-    //           //Setting the token in local Storage
-    //           localStorage.setItem('token', result.jwt);
-    //           console.log(result.expire_at);
-              
-    //         }
-    //       );
-    //     }
-    //     if(res){
-    //       console.log(res);
-    //     }
-    //   });
+    
 }
-addTweet(newTweet:Tweet){
+addTweet(text:string){
+  const newTweet:Tweet = {
+    username: this.username,
+    tweet: text
+  }
   this.tweetService.postTweet(newTweet).subscribe((tweets:Tweet[])=>{this.tweets = tweets});
 }
 deleteTweet(tweet:Tweet){
   this.tweetService.removeTweet(tweet).subscribe((tweets:Tweet[])=>{this.tweets = tweets});
 }
+myTweets(){
+  //console.log('hey');
+  let myTweets: Tweet[]=[];
+  this.tweets.forEach(tweet => {
+    if(this.username === tweet.username){
+      //console.log(tweet);
+      myTweets.push(tweet);
+    }
 
-
+  })
+  this.tweets = myTweets;
+  this.showAll = false;
+  ;
+}
+allTweets(){
+  this.getTweets();
+  this.showAll=true;
+}
 }

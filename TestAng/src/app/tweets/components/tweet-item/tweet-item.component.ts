@@ -9,6 +9,7 @@ import { faTrash } from '@fortawesome/free-solid-svg-icons';
 export class TweetItemComponent implements OnInit {
   @Output() onDeleteTweet = new EventEmitter;
   @Input() tweet!:Tweet;
+  @Input() username!: string;
   faTrash = faTrash;
   constructor() { }
 

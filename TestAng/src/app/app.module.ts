@@ -17,6 +17,8 @@ import { Routes, RouterModule } from '@angular/router';
 import { AuthService } from './auth/auth.service';
 import { AuthGuard } from './auth.guard';
 import { AccountComponent } from './account/account.component';
+import { TweetsButtonComponent } from './tweets/components/my_tweets_button/tweets-button/tweets-button.component';
+
 
 const routes: Routes = [
   {path: 'tweets', 
@@ -39,7 +41,8 @@ const routes: Routes = [
     SignUpComponent,
     LogInComponent,
     ButtonComponent,
-    AccountComponent
+    AccountComponent,
+    TweetsButtonComponent,
   ],
   imports: [
     BrowserModule,

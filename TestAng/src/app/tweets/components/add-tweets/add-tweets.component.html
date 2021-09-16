@@ -1,8 +1,8 @@
 <form class="newTweet" (ngSubmit)="AddTweet()">
     <input type="text" name="text" [(ngModel)]="text" placeholder="How are you feeling today?">
-    <input type="text" name="username" [(ngModel)]="username"placeholder="How can we call you?">
     <input type="submit" id="send" hidden>
     <label for="send">
         <fa-icon [icon]="faPaperPlane"></fa-icon>
     </label>
+
 </form>

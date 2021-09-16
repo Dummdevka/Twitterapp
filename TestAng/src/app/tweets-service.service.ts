@@ -53,6 +53,7 @@ export class TestServiceService {
     const url = `${this.apiUrl}/?action=delete&id=${tweet.id}`;
     return this.http.get<Tweet[]>(url);
   }
+  //Refresh access token (when displaying tweets+checking if the user is allowed to see the page)
   refreshToken(): Observable <Token>{
     const url = `${this.apiUrl}/?page=auth&action=refresh`;
     return this.http.get <Token> (url, httpAuthHeader);

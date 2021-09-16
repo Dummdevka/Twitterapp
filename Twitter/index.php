@@ -25,7 +25,8 @@ require_once BASEDIR . 'includes'.DS.'Db_auth.php';
 //Routing
 $routes_arr = [
     'index',
-    'auth'
+    'auth',
+    'account'
 ];
 
 //Checking the GET 

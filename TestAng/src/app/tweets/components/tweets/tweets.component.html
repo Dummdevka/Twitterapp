@@ -1,5 +1,12 @@
 <button (click)="onLogOut()" id="signUpButton">Log out</button>
+<button (click)="myProfile()" id="signUpButton" [(ngModel)]="username">{{ username }}</button>
 <app-add-tweets (onAddTweet)="addTweet($event)"></app-add-tweets>
+<div *ngIf="showAll; else showAllTweets">
+    <app-tweets-button [text]="'Show my tweets'" (onShowMyTweets)="myTweets()"></app-tweets-button>
+</div>
+<ng-template #showAllTweets>
+    <app-tweets-button [text]="'Show all tweets'" (onShowMyTweets)="allTweets()"></app-tweets-button>
+</ng-template>
 <div class="tweets-feed">
-    <app-tweet-item *ngFor="let tweet of tweets" [tweet]="tweet" (onDeleteTweet)="deleteTweet($event)"></app-tweet-item>
+    <app-tweet-item *ngFor="let tweet of tweets" [username]="username" [tweet]="tweet" (onDeleteTweet)="deleteTweet($event)"></app-tweet-item>
 </div>

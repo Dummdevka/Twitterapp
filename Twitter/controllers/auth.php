@@ -1,6 +1,7 @@
 <?php
 require_once __DIR__ .DS. 'Base.php';
 require_once BASEDIR . 'includes' . DS . 'Session.php';
+require_once __DIR__ . DS . 'account.php';
 use Firebase\JWT\JWT;
 class Auth extends BaseController{
     protected $username;
@@ -78,6 +79,7 @@ class Auth extends BaseController{
                 $this->setAccessJwt($user);
                 //httpOnly cookie
                 $this->setRefreshJwt($user);
+                new Account($this->db_tweets, $this->db_tweets, $user);
                 exit();
             } else {
                 $this->setStatus('Some fields are empty!');

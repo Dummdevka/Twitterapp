@@ -9,27 +9,28 @@ import{faPaperPlane} from '@fortawesome/free-regular-svg-icons'
 export class AddTweetsComponent implements OnInit {
   text!:string;
   username!:string;
+
   @Output() onAddTweet = new EventEmitter;
   faPaperPlane = faPaperPlane;
-  constructor( ) { }
+  constructor( ) {
+    
+   }
 
   ngOnInit(): void {
+
   }
   AddTweet(){
     //Validation
-  if(!this.text && !this.username){
+  if(!this.text){
     alert("You forgot something :(");
     return;
   }
   //Creating a new Tweet
-  const newTweet:Tweet = {
-    username: this.username,
-    tweet: this.text
-  }
   //Call the service
-  this.onAddTweet.emit(newTweet);  
+  this.onAddTweet.emit(this.text);  
   //Clear fields
   this.text = '';
-  this.username = '';
   }
+  
 }
+
