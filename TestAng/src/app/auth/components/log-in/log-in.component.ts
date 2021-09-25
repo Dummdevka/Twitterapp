@@ -64,4 +64,7 @@ export class LogInComponent implements OnInit {
       alert("You can't submit an invalid form!");
     }
   }
+  reload(){
+    window.location.reload();
+  }
 }

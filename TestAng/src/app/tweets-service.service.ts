@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { HttpInterceptor } from '@angular/common/http';
+import { TweetsInterceptorInterceptor } from './tweets/tweets-interceptor.interceptor';
 import { HashLocationStrategy } from '@angular/common';
 import { Tweet } from './Tweet';
 import { Token } from './Token';
@@ -15,7 +16,8 @@ const httpOptions = {
   }),
   withCredentials: true
 };
-const token = localStorage.getItem('token');
+//const token = this.getToken();
+//console.log(token);
 const httpAuthHeader = {
   headers: new HttpHeaders
   ({
@@ -23,7 +25,7 @@ const httpAuthHeader = {
     'Access-Control-Allow-Origin': '*',
     'Access-Control-Allow-Headers': '*',
     'Access-Control-Allow-Methods': '*',
-  'Authorization': `Bearer ${token}`
+    //'Authorization': `Bearer ${token}`
 }),
   withCredentials: true
 }
@@ -31,13 +33,11 @@ const httpAuthHeader = {
   providedIn: 'root'
 })
 export class TestServiceService {
+  // public getToken(): string {
+  //   return localStorage.getItem('token');
+  // }  
   private apiUrl = 'http://localhost/twitterapp/Twitter';
   constructor( private http:HttpClient) { 
-
-  }
-  checkAllow(): Observable <Token>{
-    const url = `${this.apiUrl}/?page=index&action=checkToken`;
-    return this.http.get<Token>(url,httpAuthHeader);
   }
   getTweets():Observable<Tweet[]>{
   const url = `${this.apiUrl}/?page=index`;
@@ -46,16 +46,18 @@ export class TestServiceService {
 
   postTweet(tweet:Tweet):Observable<Tweet[]>{
     const url = `${this.apiUrl}/?page=index&action=add`;
-    return this.http.post<Tweet[]>(url,tweet, httpOptions);
+    return this.http.post<Tweet[]>(url,tweet, httpAuthHeader);
   }
 
   removeTweet(tweet:Tweet){
     const url = `${this.apiUrl}/?action=delete&id=${tweet.id}`;
-    return this.http.get<Tweet[]>(url);
+    return this.http.get<Tweet[]>(url, httpAuthHeader);
   }
   //Refresh access token (when displaying tweets+checking if the user is allowed to see the page)
   refreshToken(): Observable <Token>{
     const url = `${this.apiUrl}/?page=auth&action=refresh`;
+    //console.log(token);
+    
     return this.http.get <Token> (url, httpAuthHeader);
   }
   clearRefresh(): Observable <boolean>{

@@ -4,6 +4,7 @@ import { Tweet } from 'src/app/Tweet';
 import { Router } from '@angular/router';
 import jwt_decode, {JwtPayload,JwtDecodeOptions,JwtHeader} from "jwt-decode";
 import { TestServiceService } from 'src/app/tweets-service.service';
+import { TweetsInterceptorInterceptor } from '../../tweets-interceptor.interceptor';
 @Component({
   selector: 'app-tweets',
   templateUrl: './tweets.component.html',
@@ -13,39 +14,83 @@ export class TweetsComponent implements OnInit {
   tweets!:Tweet[];
   username!:string;
   showAll = true;
-  constructor(private tweetService:TestServiceService, private router: Router) {
-    this.tweetService.refreshToken().subscribe(
-        res => {
-          if(res){
-              localStorage.setItem('token', res.jwt);
-            
-          }
-          if(!res){
-            console.log('valid');
-          }
-          
-
-        }
-      );
+  allow!: boolean;
+  constructor(public tweetService:TestServiceService, private router: Router) {
     
+      this.checkAllow();
       this.getTweets();
       this.getUsername();
    }
-   getTweets(){
-    this.tweetService.getTweets().subscribe(tweets=>{
-      
-      this.tweets=tweets},
-      err=>{
-        if(err instanceof HttpErrorResponse){
-          if(err.status === 0){
-            //Why err.status == 0???
-            //Not authorized users can not access tweets
-            console.log(err.message);
-            this.router.navigate(['/signup']);
-          }
+   checkAllow(){
+    this.tweetService.refreshToken().subscribe(
+      res => {
+        if(res){
+          //Storing refreshed token
+            try{
+              localStorage.setItem('token', res.jwt);
+              // console.log('refreshed');
+              console.log('refreshed');
+              
+            } catch(error){
+              console.log(error);
+
+              //return false;
+            }
+            
         }
-      });
+        if(!res){
+          //In case the token is valid
+          //this.allow = true;
+          
+          console.log('valid');
+        }
+      },
+      err => {
+        //If there are any errors - log out
+        if(err instanceof HttpErrorResponse){
+          if(err.status === 404){
+            console.log(err.message);
+          }
+          if(err.status === 403){
+            console.log('No refresh token');
+          }
+          this.onLogOut();
+
+          //return process.exit(0);
+
+          //this.allow = false;
+          //return;
+        }
+      }
+    );
+    //return false;
    }
+   getTweets(){
+      this.checkAllow();
+      this.tweetService.getTweets().subscribe(
+        tweets=>{
+        if(!tweets){
+  
+          //Reload the page again to show the tweets
+          
+        }
+        this.tweets=tweets
+      },
+  
+        err=>{
+          if(err instanceof HttpErrorResponse){
+            if(err.status === 0){
+              
+              
+            }
+            console.log(err);
+            //this.onLogOut();
+          }
+        });
+      } 
+      //}
+      
+  
    onLogOut(){
     //Clean localStorage
     localStorage.clear();
@@ -57,14 +102,13 @@ export class TweetsComponent implements OnInit {
           this.router.navigate(['/login']);
         } 
         else{
+          console.log(res);
           this.router.navigate(['/login']);
         }
       }
     );
   }
-  myProfile(){
-    
-  }
+  
   getUsername(this: any){
     try{
       const token = localStorage.getItem('token');
@@ -72,7 +116,6 @@ export class TweetsComponent implements OnInit {
       this.username = payload.data['username'];
     } catch(error){
       console.log(error);
-      this.router.navigate(['/login']);
     }
 
   }
@@ -80,21 +123,36 @@ export class TweetsComponent implements OnInit {
     
 }
 addTweet(text:string){
+  //Refresh the token before sending the tweet
+  this.checkAllow()
   const newTweet:Tweet = {
     username: this.username,
     tweet: text
   }
-  this.tweetService.postTweet(newTweet).subscribe((tweets:Tweet[])=>{this.tweets = tweets});
+  this.tweetService.postTweet(newTweet).subscribe((tweets:Tweet[])=>{
+    this.tweets = tweets;
+    //window.location.reload();
+  });
 }
-deleteTweet(tweet:Tweet){
-  this.tweetService.removeTweet(tweet).subscribe((tweets:Tweet[])=>{this.tweets = tweets});
+
+deleteTweet(tweet: Tweet){
+  
+  this.checkAllow();
+  
+  this.tweetService.removeTweet(tweet).subscribe((tweets:Tweet[])=>{
+    this.tweets = tweets;
+  });
+
+  //Refresh the token before removing the tweet
+  
+
 }
+
+
 myTweets(){
-  //console.log('hey');
   let myTweets: Tweet[]=[];
   this.tweets.forEach(tweet => {
     if(this.username === tweet.username){
-      //console.log(tweet);
       myTweets.push(tweet);
     }
 

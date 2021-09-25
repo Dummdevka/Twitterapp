@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__ .DS. 'Base.php';
+require_once __DIR__ .DS. 'auth.php';
 require_once "vendor/firebase/php-jwt/src/ExpiredException.php";
 use Firebase\JWT\JWT;
 class Index extends BaseController
@@ -8,19 +9,26 @@ class Index extends BaseController
     {
         
         parent::__construct($db_tweets, $db_auth);
-        //If a tweet has been added
+
         
-        if (isset($_GET['action']) && strcmp($_GET['action'],'add')==0) {
-            //Send tweet to the db
-            
-            $this->sendTweet();
-        }
-        if (isset($_GET['action']) && strcmp($_GET['action'],'delete')==0){
-            if (isset($_GET['id'])) {
-                $this->deleteTweet();
+            if (isset($_GET['action']) && strcmp($_GET['action'],'add')==0) {
+                //Send tweet to the db
+                if($this->checkToken()===false){
+                    $this->sendTweet();
+                } else{
+                    return false;
+                }
             }
-        }
-        print_r(json_encode($this->db_tweets->get_tweets()));
+            if (isset($_GET['action']) && strcmp($_GET['action'],'delete')==0){
+                if (isset($_GET['id'])) {
+                    if($this->checkToken()===false){
+                        $this->deleteTweet();
+                    } else{
+                        return false;
+                    }
+                }
+            }
+            print_r(json_encode($this->db_tweets->get_tweets()));
        
     }
     
@@ -36,7 +44,7 @@ class Index extends BaseController
             //Sending tweet to the db
             $this->db_tweets->insert_tweet($tweet, $username);
         } else{
-            print_r($postData);
+            $this->setStatus(422, "Invalid tweet");
         }
 
     }

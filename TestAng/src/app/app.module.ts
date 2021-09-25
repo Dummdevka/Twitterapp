@@ -1,8 +1,8 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { AppComponent } from './app.component';
-import { HttpClientModule } from '@angular/common/http';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
 import { HeaderComponent } from './tweets/components/header/header.component';
@@ -18,15 +18,18 @@ import { AuthService } from './auth/auth.service';
 import { AuthGuard } from './auth.guard';
 import { AccountComponent } from './account/account.component';
 import { TweetsButtonComponent } from './tweets/components/my_tweets_button/tweets-button/tweets-button.component';
-
+import { TweetsInterceptorInterceptor } from './tweets/tweets-interceptor.interceptor';
 
 const routes: Routes = [
   {path: 'tweets', 
   component: TweetsComponent,
-  canActivate: [AuthGuard]
+  
 },
   {path: 'signup',
    component: SignUpComponent},
+  {path: 'account',
+    component: AccountComponent,
+  },
   {path: '', redirectTo: '/signup', pathMatch: 'full'},
   {path: 'login', component: LogInComponent}
 ];
@@ -56,7 +59,12 @@ const routes: Routes = [
       { enableTracing: true } // <-- debugging purposes only
     )
   ],
-  providers: [AuthService, AuthGuard],
+  providers: [AuthService, AuthGuard,
+  {
+    provide: HTTP_INTERCEPTORS,
+    useClass: TweetsInterceptorInterceptor,
+    multi: true
+  }],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

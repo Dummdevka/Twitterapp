@@ -10,6 +10,12 @@ use \Firebase\JWT\JWT;
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
+//Handling pre-flight requests
+if($_SERVER['REQUEST_METHOD'] == 'OPTIONS'){
+    header('Access-Control-Allow-Origin: http://localhost:4200');
+    http_response_code(200);
+    exit();
+}
 //Defining constants
 define("DS", DIRECTORY_SEPARATOR);
 define("BASEDIR", __DIR__ . DS);

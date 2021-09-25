@@ -12,31 +12,43 @@ class Auth extends BaseController{
     public function __construct($db_tweets, $db_auth)
     {
         parent::__construct($db_tweets, $db_auth);
-        if(isset($_GET['action'])&& strcmp($_GET['action'], 'signup')===0){
-            $this->signUp();
-            exit();
-        }
-        if(isset($_GET['action'])&& strcmp($_GET['action'], 'login')===0){
-            $this->logIn();
-            exit();
-        }
-        if(isset($_GET['action'])&& strcmp($_GET['action'], 'refresh')===0){
-            if($this->checkToken()===false){
-            $this->getNewAccess();
-            exit();
-            } else {
-                print_r(json_encode(false));
+        
+            if(isset($_GET['action'])&& strcmp($_GET['action'], 'refresh')===0){
+                //var_dump(getallheaders());
+                $headers = getallheaders();
+                if(!isset($headers['Authorization'])){
+                    $this->setStatus(505, 'here');
+                    exit();
+                }
+                if($this->checkToken()===false){
+                    //Valid access token
+                    return false;
+                    exit();
+                } else{
+                    try{
+                        $this->getNewAccess();
+                    } catch(Exception $e){
+                        $this->setStatus(403, $e->getMessage());
+                    }
+                }
             }
-        }
+
+            if(isset($_GET['action'])&& strcmp($_GET['action'], 'signup')===0){
+                $this->signUp();
+                exit();
+            }
+            if(isset($_GET['action'])&& strcmp($_GET['action'], 'login')===0){
+                $this->logIn();
+                exit();
+            }
+        
+        //Clear cookie anyway 
         if(isset($_GET['action'])&& strcmp($_GET['action'], 'clear')===0){
             $this->clearCookie();
             exit();
         }
     }
-    public function setStatus($message){
-        http_response_code(422);
-        print_r(json_encode($message));
-    }
+    
     public function signUp(){
         $rawPostData = file_get_contents('php://input');
 
@@ -47,7 +59,8 @@ class Auth extends BaseController{
             $this->validateEmail($postData->email);
             $this->validatePass($postData->pass);
             if(!empty($this->errors)){
-                $this->setStatus($this->errors);
+                //Access forbidden
+                $this->setStatus(403, $this->errors);
                 exit();
             }
             $newUserData = [
@@ -56,7 +69,6 @@ class Auth extends BaseController{
                 'pass' => $this->pass
             ];
             $data = $this->db_auth->addUser($newUserData);
-            //Create tokens and send them back
         }
     }
     public function logIn(){
@@ -73,45 +85,17 @@ class Auth extends BaseController{
                 ];
 
                 $user = $this->db_auth->log_in($loginData);
-                //LocalStorage
-                // print_r($user);
-                // exit();
                 $this->setAccessJwt($user);
                 //httpOnly cookie
                 $this->setRefreshJwt($user);
                 new Account($this->db_tweets, $this->db_tweets, $user);
                 exit();
             } else {
-                $this->setStatus('Some fields are empty!');
+                $this->setStatus(403, 'Some fields are empty!');
             }
         }
     }
-    public function setAccessJwt(array $user){
-        $issuer_claim = "http://localhost"; // this can be the servername
-        $audience_claim = "http://localhost";
-        $issuedat_claim = time(); // issued at
-        $notbefore_claim = $issuedat_claim + 1; //not before in seconds
-        $expire_claim = $issuedat_claim + 10; // expire time in seconds
-        $access_token = array(
-            "iss" => $issuer_claim,
-            "aud" => $audience_claim,
-            "iat" => $issuedat_claim,
-            "nbf" => $notbefore_claim,
-            "exp" => $expire_claim,
-            "data" => array(
-                "id" => $user['id'],
-                "username" => $user['username']
-            )
-        );
-        $jwt = JWT::encode($access_token, $this->key);
-        echo json_encode(
-            array(
-                "message" => "Successful login.",
-                "jwt" => $jwt,
-                "expire_at" => $expire_claim,
-            )
-        );
-    }
+   
     public function setRefreshJwt(array $user){
         $issuer_claim = "http://localhost"; // this can be the servername
         $audience_claim = "http://localhost";
@@ -131,7 +115,7 @@ class Auth extends BaseController{
             //Creating a refresh token
             $jwtRefresh = JWT::encode($refresh_token, $this->refresh);
             //Storing it to the httpOnly
-            setcookie("refresh", $jwtRefresh, time()+3600, '/', '' ,false, true);
+            setcookie("refresh", $jwtRefresh, time()+3600*24, '/', '' ,false, true);
         } catch (Exception $e){
             print_r("Error:".$e->getMessage());
             exit();
@@ -139,23 +123,7 @@ class Auth extends BaseController{
         //
 
     }
-    public function getNewAccess(){
-        if(isset($_COOKIE['refresh'])&& (!empty(trim($_COOKIE['refresh'])))){
-            $refresh_token = $_COOKIE['refresh'];
-
-        } else{
-            exit();
-        }
-        
-            try{
-                //print_r(json_encode("here"));
-                $decoded = JWT::decode($refresh_token, $this->refresh, array('HS256'));
-                $user = (array) $decoded->data;
-                $this->setAccessJwt($user);                
-            } catch( Exception $e){
-                print_r(json_encode($e->getMessage()));
-            }
-    }
+    
     public function clearCookie(){
         if(isset($_COOKIE['refresh'])){
             
@@ -165,7 +133,7 @@ class Auth extends BaseController{
             echo json_encode(true);
             exit();
         } else{
-            echo json_encode(false);
+            return false;
         }
     }
     public function validateUsername($data){

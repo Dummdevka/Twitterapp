@@ -11,13 +11,13 @@ export class AuthGuard  {
   constructor (private authService: AuthService, private router: Router){
 
   }
-  canActivate(): boolean {
-    if(this.authService.checkAllow() === true){
-      //this.router.navigate(['/tweets']);
-      return true;
-    } else{
-      this.router.navigate(['/login']);
-      return false;
-    }
-  }
+  // canActivate(): boolean {
+  //   if(this.authService.checkAllow() === true){
+  //     //this.router.navigate(['/tweets']);
+  //     return true;
+  //   } else{
+  //     this.router.navigate(['/login']);
+  //     return false;
+  //   }
+  // }
 }

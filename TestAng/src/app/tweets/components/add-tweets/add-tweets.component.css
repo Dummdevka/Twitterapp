@@ -1,20 +1,27 @@
 form{
     margin-bottom: 20px;
     margin-left: 10%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 input{
-    width: 90%;
+    width: 82%;
     height: 25px;
     margin-bottom: 2px;
     
 }
 label{
     display: block;
-    height: 28px;
-    width: 10%;
+    height: 25px;
+    width: 15%;
     text-align: center;
+    border-radius: 3px;
     padding-top: 5px;
     background-color: rgb(42, 91, 131);
+}
+fa-icon{
+    color: rgba(174, 197, 91, 0.678);
 }
 .sort{
     margin-top: 1em;

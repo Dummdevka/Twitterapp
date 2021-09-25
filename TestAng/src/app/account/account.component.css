@@ -1,0 +1,32 @@
+.account-data{
+    width: 80%;
+    margin-left: 10%;
+    margin-top: 10px;
+}
+.account-data-block{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 16px;
+    background-color: #173f5f;
+    padding: 5px;
+    color: #888;
+    border: 1px #222 solid;
+    border-radius: 5px;
+    margin-top: 2px;
+}
+fa-icon{
+    color:rgb(174, 197, 91);
+}
+.account-button{
+    height: 2em;
+    color: black;
+    margin-top: 0.5em;
+    width: 50%;
+    background-color: rgb(174, 197, 91);
+    border: 1px black solid;
+    border-radius: 4px;
+}
+.account-button:hover{
+    background-color: #888;
+}
