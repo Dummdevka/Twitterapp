@@ -19,8 +19,6 @@ const httpOptions = {
 })
 export class AuthService {
   apiUrl:string = "http://localhost/twitterapp/Twitter";
-  token: boolean = false;
-  status: string = 'guest';
   constructor(private http: HttpClient) { }
   addUser(user:User): Observable <User>{
     const url = `${this.apiUrl}/?page=auth&action=signup`;

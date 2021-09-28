@@ -1,0 +1,26 @@
+<div class="account-data">
+    <h2>My account:</h2>
+    <div class="account-data-block">
+        <p class="user-data username"><b>Username:</b></p>
+        <div *ngIf="newUsername; else oldUsername">
+            <form (ngSubmit)="sendUsername($event)">
+                <input type="text" name="user" class="new-username" placeholder="Type your new username...">
+                <label for="send-username">
+                    <fa-icon [icon]="faCheckCircle"></fa-icon>
+                </label>
+                <button type="submit" id="send-username" hidden></button>
+            </form>
+        </div>
+        <ng-template #oldUsername>
+            <p class="user-data username-text"> {{ username }}</p>
+            <fa-icon [icon]="faPencil" (click)="changeUsername()"></fa-icon>
+        </ng-template>
+    </div>
+    <div class="account-data-block">
+        <p class="user-data email"><b>Email:</b></p>
+        <p class="user-data email-text"> {{ email }}</p>
+        
+    </div>
+    <button class="account-button delete">Delete account</button>
+    <button class="account-button change">Change password</button>
+</div>

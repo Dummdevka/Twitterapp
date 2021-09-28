@@ -37,7 +37,7 @@ $routes_arr = [
 
 //Checking the GET 
 $route = strtolower($_GET['page'] ?? 'index');
-
+//var_dump($_SERVER);
 //Compare $route to the array values
 if(!in_array($route, $routes_arr)){
     $route = 'index';

@@ -18,12 +18,36 @@ abstract class BaseController
         http_response_code($status);
         print_r(json_encode($message));
     }
+    public function validateUsername($data){
+        $username = trim($data);
+        if(strlen($username)>5&&strlen($username)<25){
+            return true;
+        } else{
+            return false;
+        }
+    }
+    public function validateEmail($data){
+        $email = trim($data);
+        if(filter_var($email, FILTER_VALIDATE_EMAIL)){
+            return true;
+        } else {
+            return false;
+        }
+    }
+    public function validatePass($data){
+        $pass = trim($data);
+        if(preg_match('/^(?=.*\d)(?=.*[A-Za-z])[0-9A-Za-z!@#$%]{8,20}$/', $pass)){
+            return true;
+        } else {
+            return false;
+        }
+    }
     public function setAccessJwt(array $user){
         $issuer_claim = "http://localhost"; // this can be the servername
         $audience_claim = "http://localhost";
         $issuedat_claim = time(); // issued at
         //$notbefore_claim = $issuedat_claim + 2; //not before in seconds
-        $expire_claim = $issuedat_claim + 20; // expire time in seconds
+        $expire_claim = $issuedat_claim + 8; // expire time in seconds
         $access_token = array(
             "iss" => $issuer_claim,
             "aud" => $audience_claim,
@@ -69,6 +93,15 @@ abstract class BaseController
                 print_r(json_encode($e->getMessage()));
             }
     }
+    public function decode($token){
+        try{
+            $decoded = JWT::decode($token, $this->refresh, array('HS256'));
+            return $decoded;
+        } catch(Exception $e){
+            return $e->getMessage();
+            exit();
+        }
+    }
     public function checkToken(){
         $headers = getallheaders();
 
@@ -80,6 +113,8 @@ abstract class BaseController
         }
         elseif(!isset($_COOKIE['refresh'])){
             $this->setStatus(403, "No refresh token");
+            var_dump($_COOKIE);
+            //var_dump($_SERVER);
             exit();
         } else{
             try{
@@ -97,14 +132,16 @@ abstract class BaseController
                 //Checking if the token is expired
                 if($e->getMessage() === "Expired token"){
                     //If the token is expired then it gets refreshed, we need to post the tweet anyway
-                    if(strcmp($_SERVER['REQUEST_METHOD'],'POST')===0){
+                
+                //If refreshing the token
+                if(isset($_GET['action'])&& (strcmp($_GET['action'], 'refresh')===0 || strcmp($_GET['action'], 'refresh')===0)){
+                    $this->getNewAccess();
+                    return false;
+                } else{
+                    //print_r(strcmp($_GET['action'], 'refresh'));
                     return false;
                 }
-                //If refreshing the token
-                if(strcmp($_SERVER['REQUEST_METHOD'],'GET')===0){
-                    $this->getNewAccess();
-                }
-                    exit();
+                    //exit();
                     
                 } else{
                     //If there is another error then log out and print it

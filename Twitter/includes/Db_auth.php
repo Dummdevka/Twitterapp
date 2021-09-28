@@ -10,7 +10,18 @@ class Db_auth extends Db
     {
         parent::__construct();
     }
-
+    public function getUser($id){
+        $sql = "SELECT id,username,email FROM users WHERE id=:id";
+        $stmt = $this->connect()->prepare($sql);
+        $stmt->execute([':id'=>$id]);
+        $res = $stmt->fetch();
+        if($res===0){
+            http_response_code(403, "No user found");
+            exit();
+        }
+        return($res);
+        
+    }
     public function addUser($userData)
     {
         try{
@@ -65,5 +76,18 @@ class Db_auth extends Db
             http_response_code(422);
             print_r(json_encode("Invalid email"));
         }
+    }
+    public function changeUsername($id, $username){
+        try{
+            $data = [':username'=>$username,
+            ':id'=>$id];
+            $sql = "UPDATE users SET username=:username WHERE id=:id";
+            $stmt = $this->connect()->prepare($sql);
+            $stmt->execute($data);
+            return true;
+        } catch(Exception $e){
+            return false;
+        }
+        
     }
 }

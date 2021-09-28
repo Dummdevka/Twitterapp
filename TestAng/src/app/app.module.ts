@@ -16,7 +16,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { Routes, RouterModule } from '@angular/router';
 import { AuthService } from './auth/auth.service';
 import { AuthGuard } from './auth.guard';
-import { AccountComponent } from './account/account.component';
+import { AccountComponent } from './account/components/account/account.component';
 import { TweetsButtonComponent } from './tweets/components/my_tweets_button/tweets-button/tweets-button.component';
 import { TweetsInterceptorInterceptor } from './tweets/tweets-interceptor.interceptor';
 

@@ -55,9 +55,12 @@ class Auth extends BaseController{
         $postData = json_decode($rawPostData);
         
         if($postData->username && $postData->email && $postData->pass){
-            $this->validateUsername($postData->username);
-            $this->validateEmail($postData->email);
-            $this->validatePass($postData->pass);
+            if($this->validateUsername($postData->username)&&$this->validateEmail($postData->email)&&$this->validatePass($postData->pass)){
+                $password = password_hash($postData->pass, PASSWORD_DEFAULT);
+                $this->username = $postData->username;
+                $this->email = $postData->email;
+                $this->pass = $password;
+            }
             if(!empty($this->errors)){
                 //Access forbidden
                 $this->setStatus(403, $this->errors);
@@ -88,7 +91,7 @@ class Auth extends BaseController{
                 $this->setAccessJwt($user);
                 //httpOnly cookie
                 $this->setRefreshJwt($user);
-                new Account($this->db_tweets, $this->db_tweets, $user);
+                //new Account($this->db_tweets, $this->db_tweets, $user);
                 exit();
             } else {
                 $this->setStatus(403, 'Some fields are empty!');
@@ -136,29 +139,6 @@ class Auth extends BaseController{
             return false;
         }
     }
-    public function validateUsername($data){
-        $username = trim($data);
-        if(strlen($username)>5&&strlen($username)<25){
-            $this->username = $username;
-        } else{
-            $this->errors[]='Invalid username!';
-        }
-    }
-    public function validateEmail($data){
-        $email = trim($data);
-        if(filter_var($email, FILTER_VALIDATE_EMAIL)){
-            $this->email = $email;
-        } else {
-            $this->errors[] = 'Invalid e-mail!';
-        }
-    }
-    public function validatePass($data){
-        $pass = trim($data);
-        if(preg_match('/^(?=.*\d)(?=.*[A-Za-z])[0-9A-Za-z!@#$%]{8,20}$/', $pass)){
-            $password = password_hash($pass, PASSWORD_DEFAULT);
-            $this->pass = $password;
-        } else {
-            $this->errors[]='Invalid password!';
-        }
-    }
+    
+    
 }

@@ -17,6 +17,7 @@
 }
 fa-icon{
     color:rgb(174, 197, 91);
+    cursor: pointer;
 }
 .account-button{
     height: 2em;
@@ -29,4 +30,21 @@ fa-icon{
 }
 .account-button:hover{
     background-color: #888;
+}
+.user-data{
+    width: 20%;
+}
+.new-username,
+.new-email{
+    width: 20em;
+    height: 1.5em;
+    background-color: #888;
+    color: rgb(174, 197, 91);
+    border: 1px rgb(174, 197, 91) solid;
+    border-radius: 3px;
+    margin-right: 5px;
+}
+.email-text{
+    width: 70%;
+    text-align: center;
 }

@@ -1,4 +1,4 @@
-<button  class="tweets-button account"[(ngModel)]="username">Hi, {{ username }}</button>
+<button  class="tweets-button account"[(ngModel)]="username" routerLink="/account" >Hi, {{ username }}</button>
 <app-add-tweets (onAddTweet)="addTweet($event)"></app-add-tweets>
 <div *ngIf="showAll; else showAllTweets">
     <app-tweets-button [text]="'Show my tweets'" (onShowMyTweets)="myTweets()"></app-tweets-button>
