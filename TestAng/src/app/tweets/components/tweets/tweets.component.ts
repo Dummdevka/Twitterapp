@@ -28,20 +28,13 @@ export class TweetsComponent implements OnInit {
           //Storing refreshed token
             try{
               localStorage.setItem('token', res.jwt);
-              // console.log('refreshed');
               console.log('refreshed');
-              
             } catch(error){
               console.log(error);
-
-              //return false;
             }
-            
         }
         if(!res){
-          //In case the token is valid
-          //this.allow = true;
-          
+          //In case the token is valid          
           console.log('valid');
         }
       },

@@ -4,7 +4,8 @@ import { faPencilAlt } from '@fortawesome/free-solid-svg-icons';
 import { AccountService } from '../../servers/account.service';
 import { User } from 'src/app/User';
 import { HttpErrorResponse } from '@angular/common/http';
-
+import { Router } from '@angular/router';
+import { TestServiceService } from 'src/app/tweets-service.service';
 @Component({
   selector: 'app-account',
   templateUrl: './account.component.html',
@@ -15,14 +16,49 @@ export class AccountComponent implements OnInit {
   email!: string;
   newUsername: boolean = false;
   newEmail: boolean = false;
+  newPass = false;
   faPencil = faPencilAlt;
   faCheckCircle = faCheckCircle;
-  constructor(private accountService: AccountService) { }
+  constructor(private accountService: AccountService, private tweetService: TestServiceService ,private router: Router) {
+    this.checkAllow();
+   }
 
   ngOnInit(): void {
+    //this.checkAllow();
     this.getData();
   }
+  checkAllow(){
+    this.tweetService.refreshToken().subscribe(
+      res => {
+        if(res){
+          //Storing refreshed token
+            try{
+              localStorage.setItem('token', res.jwt);
+              console.log('refreshed');
+            } catch(error){
+              console.log(error);
+            }
+        }
+        if(!res){
+          //In case the token is valid          
+          console.log('valid');
+        }
+      },
+      err => {
+        //If there are any errors - log out
+        if(err instanceof HttpErrorResponse){
+          if(err.status === 404){
+            console.log(err.message);
+          }
+          if(err.status === 403){
+            console.log('No refresh token');
+          }
+          this.router.navigate(['/tweets']);
+        }
+      })
+    }
   getData(){
+    //this.checkAllow();
     this.accountService.getData().subscribe(
       res =>{
         this.username = res.username!;
@@ -31,6 +67,8 @@ export class AccountComponent implements OnInit {
       },
       err=>{
         console.log(err);
+        //Log out
+        this.router.navigate(['/tweets']);
       }
     )
   }
@@ -39,6 +77,7 @@ export class AccountComponent implements OnInit {
     this.newUsername = true;
   }
   sendUsername(event: any){
+    //this.checkAllow();
     let input: string = event.target.user.value;
     if(input.length === 0){
       //Hide input
@@ -54,7 +93,6 @@ export class AccountComponent implements OnInit {
       //Send new username
       this.accountService.changeUsername(changedUsername).subscribe(
         res=>{
-
           //If false is returned
           if(!res){
             console.log("Some error((");
@@ -81,12 +119,46 @@ export class AccountComponent implements OnInit {
     }
     
   }
-  changeEmail(){
-    //Show input
-    this.newEmail = true;
+  showChangePass(){
+    this.newPass = true;
   }
-  sendEmail(){
-    //Hide input
-    this.newEmail = false;
+  changePass(event: any){
+    this.checkAllow();
+    //Get data from inputs
+    let oldPass: string = event.target.old.value;
+    let newPass: string = event.target.new.value;
+    //Validate it
+    if(oldPass.length !== 0 && newPass.length>6){
+      const passwords = {
+        old : oldPass,
+        new : newPass 
+      };
+          //Request
+      this.accountService.changePass(passwords).subscribe(
+        res=>{
+          if(!res){
+            alert("Some errors");
+          }
+          if(res){
+            alert("Success!");
+          }
+        },
+          err=>{
+            //console.log(err.error);
+            if(err instanceof HttpErrorResponse){
+              if(err.status === 405){
+                alert(err.error);
+                
+              }
+            }
+          }
+        
+      )
+      event.target.old.value = '';
+      event.target.new.value = '';
+    } else{
+      alert("Enter the data, please");
+      //console.log(event);
+    }
   }
 }

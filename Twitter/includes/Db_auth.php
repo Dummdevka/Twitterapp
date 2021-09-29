@@ -11,7 +11,7 @@ class Db_auth extends Db
         parent::__construct();
     }
     public function getUser($id){
-        $sql = "SELECT id,username,email FROM users WHERE id=:id";
+        $sql = "SELECT id,username,email, password FROM users WHERE id=:id";
         $stmt = $this->connect()->prepare($sql);
         $stmt->execute([':id'=>$id]);
         $res = $stmt->fetch();
@@ -89,5 +89,21 @@ class Db_auth extends Db
             return false;
         }
         
+    }
+    public function change_pass($newPass, $id){
+        if(strlen($newPass)!==0){
+            $data = [':id'=>$id, ':pass'=>$newPass ];
+            try{
+                $sql = "UPDATE users SET password=:pass WHERE id=:id";
+                $stmt = $this->connect()->prepare($sql);
+                $stmt->execute($data);
+                return true;
+            } catch(Exception $e){
+                return $e->getMessage();
+                //http_response_code(404);
+            }
+            
+
+        }
     }
 }

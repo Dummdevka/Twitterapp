@@ -25,6 +25,9 @@ export class AccountService {
   changeUsername(username: object): Observable <User>{
     const url = `${this.apiUrl}/?page=account&action=changeUsername`;
     return this.http.post <User> (url, username, httpOptions );
-
+  }
+  changePass(passwords: object): Observable <User> {
+    const url = `${this.apiUrl}/?page=account&action=changePass`;
+    return this.http.post<User> (url, passwords, httpOptions);
   }
 }

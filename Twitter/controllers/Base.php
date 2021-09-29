@@ -16,7 +16,7 @@ abstract class BaseController
     }
     public function setStatus($status, $message){
         http_response_code($status);
-        print_r(json_encode($message));
+        echo json_encode($message);
     }
     public function validateUsername($data){
         $username = trim($data);

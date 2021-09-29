@@ -21,6 +21,22 @@
         <p class="user-data email-text"> {{ email }}</p>
         
     </div>
-    <button class="account-button delete">Delete account</button>
-    <button class="account-button change">Change password</button>
+    <div *ngIf="newPass; else oldPass">
+        <form (ngSubmit)="changePass($event)">
+
+            <input type="text" class="old-pass" name="old" placeholder="Type your old pass here...">
+            <input type="text" class="new-pass" name="new" placeholder="Type your new password here...">
+
+        <label for="newPass">
+            <fa-icon id="change-pass-icon" [icon]="faCheckCircle"></fa-icon>
+        </label>
+        <button type="submit" id="newPass" hidden></button>
+        </form>
+        
+    </div>
+    <ng-template #oldPass>
+        <button class="account-button delete">Delete account</button>
+        <button class="account-button change" (click)="showChangePass()">Change password</button>
+    </ng-template>
+    
 </div>
