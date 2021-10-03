@@ -35,7 +35,7 @@
         
     </div>
     <ng-template #oldPass>
-        <button class="account-button delete">Delete account</button>
+        <button class="account-button delete" (click)="deleteUser()">Delete account</button>
         <button class="account-button change" (click)="showChangePass()">Change password</button>
     </ng-template>
     

@@ -28,34 +28,34 @@ export class AccountComponent implements OnInit {
     this.getData();
   }
   checkAllow(){
-    this.tweetService.refreshToken().subscribe(
-      res => {
-        if(res){
-          //Storing refreshed token
-            try{
-              localStorage.setItem('token', res.jwt);
-              console.log('refreshed');
-            } catch(error){
-              console.log(error);
-            }
-        }
-        if(!res){
-          //In case the token is valid          
-          console.log('valid');
-        }
-      },
-      err => {
-        //If there are any errors - log out
-        if(err instanceof HttpErrorResponse){
-          if(err.status === 404){
-            console.log(err.message);
-          }
-          if(err.status === 403){
-            console.log('No refresh token');
-          }
-          this.router.navigate(['/tweets']);
-        }
-      })
+    // this.tweetService.refreshToken().subscribe(
+    //   res => {
+    //     if(res){
+    //       //Storing refreshed token
+    //         try{
+    //           localStorage.setItem('token', res.jwt);
+    //           console.log('refreshed');
+    //         } catch(error){
+    //           console.log(error);
+    //         }
+    //     }
+    //     if(!res){
+    //       //In case the token is valid          
+    //       console.log('valid');
+    //     }
+    //   },
+    //   err => {
+    //     //If there are any errors - log out
+    //     if(err instanceof HttpErrorResponse){
+    //       if(err.status === 404){
+    //         console.log(err.message);
+    //       }
+    //       if(err.status === 403){
+    //         console.log('No refresh token');
+    //       }
+    //       this.router.navigate(['/tweets']);
+    //     }
+    //   })
     }
   getData(){
     //this.checkAllow();
@@ -95,10 +95,9 @@ export class AccountComponent implements OnInit {
         res=>{
           //If false is returned
           if(!res){
-            console.log("Some error((");
+            alert("Username already exists!");
             this.newUsername = false;
           }
-
           //Refreshing the username on the page
           this.getData();
           this.newUsername = false;
@@ -152,13 +151,30 @@ export class AccountComponent implements OnInit {
               }
             }
           }
-        
       )
+      //Clear the form
       event.target.old.value = '';
       event.target.new.value = '';
     } else{
       alert("Enter the data, please");
-      //console.log(event);
+    }
+  }
+  deleteUser(){
+    if(confirm("Are you sure?")){
+      this.checkAllow();
+      this.accountService.deleteUser().subscribe(
+        res=>{
+          //Clear the access token
+          localStorage.clear;
+          //Go to the main page to log out
+          this.router.navigate(['/tweets']);
+        },
+        err=>{
+          if(err instanceof HttpErrorResponse){
+            alert(err.error);
+          }
+        }
+      )
     }
   }
 }

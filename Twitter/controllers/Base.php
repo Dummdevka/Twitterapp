@@ -20,7 +20,7 @@ abstract class BaseController
     }
     public function validateUsername($data){
         $username = trim($data);
-        if(strlen($username)>5&&strlen($username)<25){
+        if(strlen($username)>5&&strlen($username)<25&&preg_match('/[0-9]/', $username)){
             return true;
         } else{
             return false;
@@ -55,7 +55,7 @@ abstract class BaseController
             //"nbf" => $notbefore_claim,
             "exp" => $expire_claim,
             "data" => array(
-                "id" => $user['id'],
+                "uniqid" => $user['uniqid'],
                 "username" => $user['username']
             )
         );
@@ -66,6 +66,33 @@ abstract class BaseController
                 "jwt" => $jwt,
                 "expire_at" => $expire_claim,
             ));
+    }
+    public function setRefreshJwt(array $user){
+        $issuer_claim = "http://localhost"; // this can be the servername
+        $audience_claim = "http://localhost";
+        $issuedat_claim = time(); // issued at
+        $notbefore_claim = $issuedat_claim + 0; //not before in seconds
+        $refresh_token = array(
+            "iss" => $issuer_claim,
+            "aud" => $audience_claim,
+            "iat" => $issuedat_claim,
+            "nbf" => $notbefore_claim,
+            "data" => [
+                "username" => $user['username'],
+                "uniqid"=>$user['uniqid']
+            ]
+        );
+        try{
+            //Creating a refresh token
+            $jwtRefresh = JWT::encode($refresh_token, $this->refresh);
+            //Storing it to the httpOnly
+            setcookie("refresh", $jwtRefresh, time()+3600*24, '/', '' ,false, true);
+        } catch (Exception $e){
+            print_r("Error:".$e->getMessage());
+            exit();
+        }
+        //
+
     }
     public function getNewAccess(){
         if(isset($_COOKIE['refresh'])){
@@ -123,7 +150,14 @@ abstract class BaseController
                 $jwt = str_replace('Bearer ', '', $token);
                 $decoded = JWT::decode($jwt, $this->key, array('HS256'));
                 $this->user = $decoded->data->username;
-                $this->id = $decoded->data->id;
+                $this->id = $decoded->data->uniqid;
+                //Check if user exists
+                if(!$this->db_auth->getUser($this->id)){
+                    var_dump($this->db_auth->getUser($this->id));
+                    var_dump($decoded);
+                    $this->setStatus(403, "User doesn't exist");
+                    exit();
+                }
                 //If it is valid then return false(valid token)
                 return false;
                 exit();
@@ -150,5 +184,11 @@ abstract class BaseController
                 }
             }
         }
+    }
+
+    public function getPostData(){
+        $rawPostData = file_get_contents('php://input');
+        $postData = json_decode($rawPostData);
+        return $postData;
     }
 }

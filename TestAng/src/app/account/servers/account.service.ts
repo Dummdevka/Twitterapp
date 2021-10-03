@@ -30,4 +30,8 @@ export class AccountService {
     const url = `${this.apiUrl}/?page=account&action=changePass`;
     return this.http.post<User> (url, passwords, httpOptions);
   }
+  deleteUser(): Observable <User> {
+    const url = `${this.apiUrl}/?page=account&action=deleteUser`;
+    return this.http.get<User> (url, httpOptions);
+  }
 }

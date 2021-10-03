@@ -88,6 +88,7 @@ class Auth extends BaseController{
                 ];
 
                 $user = $this->db_auth->log_in($loginData);
+                
                 $this->setAccessJwt($user);
                 //httpOnly cookie
                 $this->setRefreshJwt($user);
@@ -99,33 +100,7 @@ class Auth extends BaseController{
         }
     }
    
-    public function setRefreshJwt(array $user){
-        $issuer_claim = "http://localhost"; // this can be the servername
-        $audience_claim = "http://localhost";
-        $issuedat_claim = time(); // issued at
-        $notbefore_claim = $issuedat_claim + 0; //not before in seconds
-        $refresh_token = array(
-            "iss" => $issuer_claim,
-            "aud" => $audience_claim,
-            "iat" => $issuedat_claim,
-            "nbf" => $notbefore_claim,
-            "data" => [
-                "username" => $user['username'],
-                "id"=>$user['id']
-            ]
-        );
-        try{
-            //Creating a refresh token
-            $jwtRefresh = JWT::encode($refresh_token, $this->refresh);
-            //Storing it to the httpOnly
-            setcookie("refresh", $jwtRefresh, time()+3600*24, '/', '' ,false, true);
-        } catch (Exception $e){
-            print_r("Error:".$e->getMessage());
-            exit();
-        }
-        //
-
-    }
+   
     
     public function clearCookie(){
         if(isset($_COOKIE['refresh'])){

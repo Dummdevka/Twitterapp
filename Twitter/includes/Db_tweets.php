@@ -22,13 +22,16 @@ class Db_tweets extends Db{
     }
 
     //Add new tweets
-
-    public function insert_tweet($tweet, $username){
-        $sql = "INSERT INTO tweets (username,tweet) VALUES (:username,:tweet)";
+    public function insert_tweet($uniqid, $tweet, $username){
+        // var_dump($uniqid);
+        // exit();
+        //$username = $this->getId($username);
+        $sql = "INSERT INTO tweets (userid, username,tweet) VALUES (:userid, :username,:tweet)";
         $pdo = $this->connect();
 
         $stmt=$pdo->prepare($sql);
-        $stmt->execute([':tweet' => $tweet, ':username' => $username]);
+
+        $stmt->execute([':userid'=>$uniqid,':tweet' => $tweet, ':username' => $username]);
     }
 
     //Delete tweets

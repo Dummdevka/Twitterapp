@@ -3,7 +3,7 @@ import { User } from 'src/app/User';
 import { AuthService } from '../../auth.service';
 import { Observable } from 'rxjs';
 import { NavigationExtras, Router } from '@angular/router';
-import { FormBuilder, FormControl, FormGroup, ValidationErrors, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { HttpErrorResponse } from '@angular/common/http';
 @Component({
   selector: 'app-sign-up',
@@ -80,4 +80,12 @@ export class SignUpComponent implements OnInit {
     
 
   }
+
+  //Custom validator (unique username)
+  // uniqueUsernameValidator(username:string): ValidatorFn {
+  //   return (control: AbstractControl):
+  //   ValidationErrors | null => {
+
+  //   }
+  // }
 }

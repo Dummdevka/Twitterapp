@@ -34,18 +34,19 @@ class Index extends BaseController
     
     public function sendTweet()
     {
-        $rawPostData = file_get_contents('php://input');
-        $postData = json_decode($rawPostData);
-        if ($postData->username && $postData->tweet) {
-            //No whitespaces in the beginning 
-            $tweet = trim($postData->tweet);
-            $username = trim($postData->username);
-
-            //Sending tweet to the db
-            $this->db_tweets->insert_tweet($tweet, $username);
-        } else{
+        
+        if($this->getPostData()){
+                $postData = $this->getPostData();
+                //No whitespaces in the beginning 
+                $tweet = trim($postData->tweet);
+                $username = trim($postData->username);
+            
+                //Sending tweet to the db
+                $this->db_tweets->insert_tweet($this->id,$tweet, $username); 
+        }else{
             $this->setStatus(422, "Invalid tweet");
         }
+        
 
     }
 

@@ -15,13 +15,11 @@ class Account extends BaseController{
             $refresh = $_COOKIE['refresh'];
             try{
                 $token = $this->decode($refresh);
-                $this->id = $token->data->id;
+                $this->id = $token->data->uniqid;
             } catch(Exception $e){
                 $this->setStatus(403, $e->getMessage());
                 exit();
             }
-            // echo $this->id;
-            // exit();
             $data = $this->db_auth->getUser($this->id);
             // var_dump ($data['id']);
             // exit();
@@ -43,45 +41,45 @@ class Account extends BaseController{
         }
         //Change email
         //Delete account
+        if(isset($_GET['action'])&&strcmp($_GET['action'], 'deleteUser')===0){
+            $this->deleteUser($this->id);
+            exit();
+        }
         } else{
             echo json_encode($this->checkToken());
         }
         
     }
     public function changeUsername($id){
-        $userId = $id;
-        $rawPostData = file_get_contents('php://input');
-        $postData = json_decode($rawPostData);
-        if(!empty($postData->username)){
-            
-            $username = $postData->username;
-            if($this->validateUsername($username)){
-                if($this->db_auth->changeUsername($userId,$username)){
-                    echo json_encode($username);
-                } else{
-                    return false;
+        //Get post data
+        if(!empty($this->getPostData())){
+                $postData = $this->getPostData();
+                $username = $postData->username;
+                $refreshData = [
+                    'uniqid' => $id,
+                    'username' => $username
+                ];
+                if($this->validateUsername($username)){
+                    if($this->db_auth->changeUsername($id,$username)){
+                        //Refresh data in the refresh token
+                        $this->setRefreshJwt($refreshData);
+                        echo json_encode($username);
+                    } else{
+                        return false;
+                    }
+                } else {
+                    echo json_encode("invalid");
                 }
             }
-        }else{
-            $this->setStatus(404, "Invalid username");
-            exit();
         }
         
-    }
     public function changePass($id, $pass){
         $userId = $id;
         $userPass = $pass;
-
-        $rawPostData = file_get_contents('php://input');
-        $postData = json_decode($rawPostData);
-        // var_dump($postData->new);
-        // exit();
-        if(!empty($postData->old) && !empty($postData->new)){
+        $postData = $this->getPostData();
+        if($postData){
             $oldPass = $postData->old;
             $newPass = $postData->new;
-            // var_dump('here');
-            // exit();
-            //check old password
             if(password_verify($oldPass, $userPass)){
                 if($this->validatePass($newPass)){
                     $newPassHash = password_hash($newPass, PASSWORD_DEFAULT);
@@ -93,16 +91,21 @@ class Account extends BaseController{
                         exit();
                     }
                 }
-            } else{
-                $this->setStatus(405, "Wrong old pass!");
-                //exit();
-            }
-        } else{
+            }else{
+                    $this->setStatus(405, "Wrong old pass!");
+                    exit();
+                }
+        }else{
             $this->setStatus(404, "Some errors");
             exit();
         }
     }
-    public function deleteAccount(){
-        
+    public function deleteUser($id){
+        if($this->db_auth->delete_user($id)){
+            echo json_encode(true);
+        } else{
+            $this->setStatus(404, "Unable to delete this profile");
+            exit();
+        }
     }
 }

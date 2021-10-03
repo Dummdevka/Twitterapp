@@ -54,11 +54,11 @@ export class TestServiceService {
     return this.http.get<Tweet[]>(url, httpAuthHeader);
   }
   //Refresh access token (when displaying tweets+checking if the user is allowed to see the page)
-  refreshToken(): Observable <Token>{
+  async refreshToken(): Promise <Token>{
     const url = `${this.apiUrl}/?page=auth&action=refresh`;
     //console.log(token);
     
-    return this.http.get <Token> (url, httpAuthHeader);
+    return await this.http.get <Token> (url, httpAuthHeader).toPromise();
   }
   clearRefresh(): Observable <boolean>{
     const url = `${this.apiUrl}/?page=auth&action=clear`;

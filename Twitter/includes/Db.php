@@ -46,4 +46,27 @@ abstract class Db{
             exit();
         }
     }
+   
+    //Updates data based on uniqId
+    public function update(array $queryData){
+        $table = $queryData['table'];
+        $field = $queryData['field'];
+        $val = $queryData['val'];
+        $field2 = $queryData['field2'];
+        $val2 = $queryData['val2'];
+        try{
+            $sql = "UPDATE $table SET $field=:$field WHERE $field2=:field2";
+            $data = [":$field"=>$val,
+            ":field2"=>$val2];
+
+            $stmt = $this->connect()->prepare($sql);
+            $stmt->execute($data);
+            return true;
+        } catch(Exception $e){
+            return $e->getMessage();
+        }
+        
+
+
+    }
 }

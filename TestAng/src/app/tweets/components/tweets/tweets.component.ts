@@ -17,46 +17,26 @@ export class TweetsComponent implements OnInit {
   allow!: boolean;
   constructor(public tweetService:TestServiceService, private router: Router) {
     
-      this.checkAllow();
-      this.getTweets();
-      this.getUsername();
+      
    }
-   checkAllow(){
-    this.tweetService.refreshToken().subscribe(
-      res => {
-        if(res){
-          //Storing refreshed token
-            try{
-              localStorage.setItem('token', res.jwt);
-              console.log('refreshed');
-            } catch(error){
-              console.log(error);
-            }
-        }
-        if(!res){
-          //In case the token is valid          
-          console.log('valid');
-        }
-      },
-      err => {
-        //If there are any errors - log out
-        if(err instanceof HttpErrorResponse){
-          if(err.status === 404){
-            console.log(err.message);
-          }
-          if(err.status === 403){
-            console.log('No refresh token');
-          }
-          this.onLogOut();
-
-          //return process.exit(0);
-
-          //this.allow = false;
-          //return;
-        }
+   async checkAllow(){
+    try{
+      let refresh = await this.tweetService.refreshToken();
+    if(refresh){
+      localStorage.setItem('token', refresh.jwt);
+      console.log(refresh.jwt);
+    }
+    if(!refresh){
+      console.log(refresh);
+      console.log('valid');
+    }
+    
+    } catch(error){
+      if(error instanceof HttpErrorResponse){
+        console.log(error.error);
       }
-    );
-    //return false;
+      this.onLogOut();
+    }
    }
    getTweets(){
       this.checkAllow();
@@ -112,8 +92,10 @@ export class TweetsComponent implements OnInit {
     }
 
   }
-  ngOnInit(): void {
-    
+ async ngOnInit() {
+      await this.checkAllow();
+      this.getTweets();
+      this.getUsername();
 }
 addTweet(text:string){
   //Refresh the token before sending the tweet

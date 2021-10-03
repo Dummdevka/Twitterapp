@@ -10,41 +10,70 @@ class Db_auth extends Db
     {
         parent::__construct();
     }
+
+    //This function checks if username is unique
+    public function uniqUsername($username){
+        $sql = "SELECT * FROM users WHERE username=:username";
+
+        $stmt = $this->connect()->prepare($sql);
+        $stmt->execute([':username'=>$username]);
+
+        if($stmt->rowCount()>0){
+            return false;
+        } else{
+            return true;
+        }
+    }
+
+    //This function gets user by uniqID 
     public function getUser($id){
-        $sql = "SELECT id,username,email, password FROM users WHERE id=:id";
+        $sql = "SELECT * FROM users WHERE uniqid=:id";
         $stmt = $this->connect()->prepare($sql);
         $stmt->execute([':id'=>$id]);
         $res = $stmt->fetch();
         if($res===0){
-            http_response_code(403, "No user found");
-            exit();
+            return false;
         }
         return($res);
         
     }
-    public function addUser($userData)
-    {
-        try{
-            $email = $userData['email'];
-        $pass = $userData['pass'];
-        $username = $userData['username'];
-        //Check if the user exists
+
+    //This function checks if the user exists based on username and email (log in)
+    public function userExists($data){
         $userExists = "SELECT * FROM users WHERE username=:username OR email=:email";
         $pdo = $this->connect();
         $stmt = $pdo->prepare($userExists);
-        $stmt->execute([':username' => $username, ':email' => $email]);
+        $stmt->execute($data);
         $res = $stmt->rowCount();
         if ($res > 0) {
-            http_response_code(422);
+            return true;
+            exit();
+        }
+        else{
+            return false;
+        }
+    }
+
+    //This function sends data to the database to add new user
+    public function addUser($userData)
+    {
+        try{
+        $email = $userData['email'];
+        $pass = $userData['pass'];
+        $username = $userData['username'];
+        $uniqId = uniqid();
+        //Check if the user exists
+        $data = [':username' => $username, ':email' => $email];
+        if($this->userExists($data)){
+            http_response_code(403);
             print_r(json_encode("User exists"));
             exit();
         }
-
         // Inserting a new user
-        $sql = "INSERT INTO users (username, email, password) VALUES (:username, :email, :pass)";
+        $sql = "INSERT INTO users (uniqid, username, email, password) VALUES (:uniqid, :username, :email, :pass)";
         $pdo = $this->connect();
         $stmt = $pdo->prepare($sql);
-        $stmt->execute([':username' => $username, ':email' => $email, ':pass' => $pass]);
+        $stmt->execute([':uniqid'=>$uniqId, ':username' => $username, ':email' => $email, ':pass' => $pass]);
         print_r(json_encode( $userData));
         } catch( Exception $e){
             print_r(json_encode($e->getMessage()));
@@ -53,6 +82,7 @@ class Db_auth extends Db
         
     }
 
+    //This function loggs user in
     public function log_in($userData)
     {
         $email = $userData['email'];
@@ -77,33 +107,59 @@ class Db_auth extends Db
             print_r(json_encode("Invalid email"));
         }
     }
+
+    //This function updates username based on uniqID 
     public function changeUsername($id, $username){
+        $queryData1 = [
+            'table' => 'users',
+            'field' => 'username',
+            'val' => $username,
+            'field2'=>'uniqid',
+            'val2' => $id,
+        ];
+        $queryData2 = [
+            'table' => 'tweets',
+            'field' => 'username',
+            'val' => $username,
+            'field2'=>'userid',
+            'val2' => $id,
+        ];
+        
+        //Change username in all the tweets
+        if($this->uniqUsername($username)){
+            if($this->update($queryData1)&&$this->update($queryData2)){
+                return true;
+        } 
+        
+    }
+}
+
+    //This func changes password
+    public function change_pass($newPass, $id){
+        $queryData = [
+            'table' => 'users',
+            'field' => 'password',
+            'val' => $newPass,
+            'field2' => 'uniqid',
+            'val2' => $id,
+        ];
+        if(strlen($newPass)!==0){
+            if($this->update($queryData)){
+                return true;
+            } 
+        }
+    }
+
+    //This func deletes the user
+    public function delete_user($id){
         try{
-            $data = [':username'=>$username,
-            ':id'=>$id];
-            $sql = "UPDATE users SET username=:username WHERE id=:id";
+            $sql = "DELETE from users WHERE id=:id";
             $stmt = $this->connect()->prepare($sql);
-            $stmt->execute($data);
+            $stmt->execute([':id'=>$id]);
             return true;
         } catch(Exception $e){
             return false;
         }
         
-    }
-    public function change_pass($newPass, $id){
-        if(strlen($newPass)!==0){
-            $data = [':id'=>$id, ':pass'=>$newPass ];
-            try{
-                $sql = "UPDATE users SET password=:pass WHERE id=:id";
-                $stmt = $this->connect()->prepare($sql);
-                $stmt->execute($data);
-                return true;
-            } catch(Exception $e){
-                return $e->getMessage();
-                //http_response_code(404);
-            }
-            
-
-        }
     }
 }
