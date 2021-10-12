@@ -3,6 +3,7 @@ header('Access-Control-Allow-Origin: http://localhost:4200');
 header('Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Methods, Access-Control-Allow-Headers, Access-Control-Allow-Origin, Authorization');
 //header('Access-Control-Allow-Methods: *');
 header('Access-Control-Allow-Credentials: true');
+//header ('Accept:multipart/form-data');
 require_once "vendor/autoload.php";
 use \Firebase\JWT\JWT;
 //Errors
@@ -16,10 +17,15 @@ if($_SERVER['REQUEST_METHOD'] == 'OPTIONS'){
     http_response_code(200);
     exit();
 }
+
 //Defining constants
 define("DS", DIRECTORY_SEPARATOR);
 define("BASEDIR", __DIR__ . DS);
+//define("BASEDIRUPLOAD", __DIR__ . DS);
 define("URL", 'http://localhost/twitter');
+chmod('/Applications/XAMPP/xamppfiles/temp/',0777);
+//chmod('/Applications/XAMPP/xamppfiles/htdocs/TwitterApp/uploadedFiles/',0777);
+
 //define("TEMPS", BASEDIR. 'templates');
 //define("VIEWS", BASEDIR. 'views');
 

@@ -65,8 +65,10 @@ abstract class Db{
         } catch(Exception $e){
             return $e->getMessage();
         }
-        
-
-
     }
+        public function setStatus($status, $message){
+            http_response_code($status);
+            echo json_encode($message);
+        }
+
 }

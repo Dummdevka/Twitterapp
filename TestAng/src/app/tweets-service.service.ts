@@ -28,6 +28,17 @@ const httpAuthHeader = {
     //'Authorization': `Bearer ${token}`
 }),
   withCredentials: true
+};
+const httpTweetHeader = {
+  headers: new HttpHeaders
+  ({
+    //'Content-Type': ,
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Headers': '*',
+    'Access-Control-Allow-Methods': '*',
+    //'Authorization': `Bearer ${token}`
+}),
+  withCredentials: true
 }
 @Injectable({
   providedIn: 'root'
@@ -44,9 +55,9 @@ export class TestServiceService {
   return this.http.get<Tweet[]>(url,httpAuthHeader);
   }
 
-  postTweet(tweet:Tweet):Observable<Tweet[]>{
+  postTweet(tweet:FormData):Observable<Tweet[]>{
     const url = `${this.apiUrl}/?page=index&action=add`;
-    return this.http.post<Tweet[]>(url,tweet, httpAuthHeader);
+    return this.http.post<Tweet[]>(url,tweet, httpTweetHeader);
   }
 
   removeTweet(tweet:Tweet){
@@ -63,5 +74,10 @@ export class TestServiceService {
   clearRefresh(): Observable <boolean>{
     const url = `${this.apiUrl}/?page=auth&action=clear`;
     return this.http.get <boolean> (url, httpAuthHeader);
+  }
+  sendImage(imageData: FormData): Observable <Object>{
+    const url = `${this.apiUrl}/?page=index&action=saveImage`;
+    return this.http.post <Object> (url, imageData, httpTweetHeader);
+
   }
 }

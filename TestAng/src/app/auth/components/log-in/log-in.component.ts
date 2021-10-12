@@ -54,7 +54,7 @@ export class LogInComponent implements OnInit {
         },
         err => { if(err instanceof HttpErrorResponse){
           if(err.status === 422){
-            console.log(err.error);
+            alert(err.error);
           }
         }}
       );

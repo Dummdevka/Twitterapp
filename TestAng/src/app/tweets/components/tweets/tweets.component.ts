@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import jwt_decode, {JwtPayload,JwtDecodeOptions,JwtHeader} from "jwt-decode";
 import { TestServiceService } from 'src/app/tweets-service.service';
 import { TweetsInterceptorInterceptor } from '../../tweets-interceptor.interceptor';
+import { forkJoin } from 'rxjs';
 @Component({
   selector: 'app-tweets',
   templateUrl: './tweets.component.html',
@@ -14,7 +15,7 @@ export class TweetsComponent implements OnInit {
   tweets!:Tweet[];
   username!:string;
   showAll = true;
-  allow!: boolean;
+  uploadedImg!: File;
   constructor(public tweetService:TestServiceService, private router: Router) {
     
       
@@ -96,18 +97,33 @@ export class TweetsComponent implements OnInit {
       await this.checkAllow();
       this.getTweets();
       this.getUsername();
+      this.getImage()
 }
-addTweet(text:string){
+addTweet(tweet:Tweet){
   //Refresh the token before sending the tweet
-  this.checkAllow()
+  this.checkAllow();
+  console.log(tweet);
   const newTweet:Tweet = {
     username: this.username,
-    tweet: text
+    tweet: tweet.tweet,
+    //image: tweet.image
   }
-  this.tweetService.postTweet(newTweet).subscribe((tweets:Tweet[])=>{
+  //If there is a picture - send it as well
+  
+  let tweetData = new FormData;
+  tweetData.append('username', this.username);
+  tweetData.append('tweet', tweet.tweet);
+
+  //If there are any pictures attached
+  if(tweet.image !== null){
+    tweetData.append('tweet-attachments', tweet.image);
+  }
+  //Post tweet
+  this.tweetService.postTweet(tweetData).subscribe((tweets:Tweet[])=>{
     this.tweets = tweets;
-    //window.location.reload();
   });
+
+  
 }
 
 deleteTweet(tweet: Tweet){
@@ -140,4 +156,22 @@ allTweets(){
   this.getTweets();
   this.showAll=true;
 }
+getImage(){
+  if(localStorage.getItem('image')){
+    
+  }
+}
+saveUploadedImage(image: File){
+
+    // this.uploadedImg = image;
+    // const imageData = new FormData();
+    // imageData.append('file', image);
+    
+    // this.tweetService.sendImage(imageData).subscribe(
+    //   res=>{
+    //     console.log(res);
+    //   }
+    // )
+    // console.log(imageData.append);
+  }
 }

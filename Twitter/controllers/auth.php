@@ -50,16 +50,17 @@ class Auth extends BaseController{
     }
     
     public function signUp(){
-        $rawPostData = file_get_contents('php://input');
-
-        $postData = json_decode($rawPostData);
+        $postData = $this->getPostData();
         
-        if($postData->username && $postData->email && $postData->pass){
-            if($this->validateUsername($postData->username)&&$this->validateEmail($postData->email)&&$this->validatePass($postData->pass)){
+        if(!empty(trim($postData->username)) && !empty(trim($postData->email)) && !empty(trim($postData->pass))){
+            if(($this->validateUsername($postData->username)===true)&&($this->validateEmail($postData->email)===true)&&($this->validatePass($postData->pass)===true)){
                 $password = password_hash($postData->pass, PASSWORD_DEFAULT);
                 $this->username = $postData->username;
                 $this->email = $postData->email;
                 $this->pass = $password;
+            } else {
+                $this->setStatus(422, "Invalid data, sorry :(");
+                exit();
             }
             if(!empty($this->errors)){
                 //Access forbidden
@@ -72,12 +73,14 @@ class Auth extends BaseController{
                 'pass' => $this->pass
             ];
             $data = $this->db_auth->addUser($newUserData);
+        } else{
+            $this->setStatus(422, "Invalid data, sorry :(");
+            exit();
         }
     }
     public function logIn(){
-        $rawPostData = file_get_contents('php://input');
-        $postData = json_decode($rawPostData);
-        if($postData->email && $postData->pass){
+        $postData = $this->getPostData();
+        
             if(!empty(trim($postData->email))&&!empty(trim($postData->pass))){
                 $this->email = trim($postData->email);
                 $this->pass = trim($postData->pass);
@@ -88,7 +91,9 @@ class Auth extends BaseController{
                 ];
 
                 $user = $this->db_auth->log_in($loginData);
-                
+                if($user){
+
+                }
                 $this->setAccessJwt($user);
                 //httpOnly cookie
                 $this->setRefreshJwt($user);
@@ -96,8 +101,8 @@ class Auth extends BaseController{
                 exit();
             } else {
                 $this->setStatus(403, 'Some fields are empty!');
+                exit();
             }
-        }
     }
    
    

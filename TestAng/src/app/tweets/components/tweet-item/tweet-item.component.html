@@ -1,9 +1,17 @@
 <div class="postTweet">
 <div class="singleTweet">
-    <p class="tweetText">{{tweet.tweet}}</p>
+    <div class="tweetText">
+        <p class="tweetTweet">{{tweet.tweet}}</p>
+    
     <div class="tweetOpt">
         <small class="tweetUsername">{{ tweet.username }}</small>
         <small class="tweetTime">{{tweet.time}}</small>
+    </div>
+    </div>
+    
+    <div *ngIf="tweet.url" class="tweetImage">
+        <!-- <img src="{{tweet.url}}" alt="{{tweet.url}}"> -->
+        <img src="{{tweet.url}}" alt="{{tweet.url}}">
     </div>
 </div>
 <div *ngIf="tweet.username === username ">

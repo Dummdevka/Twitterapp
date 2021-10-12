@@ -2,7 +2,9 @@
 CREATE TABLE IF NOT EXISTS tweets(
     id INT(6) AUTO_INCREMENT PRIMARY KEY,
     tweet VARCHAR(1000),
-    time TIMESTAMP default CURRENT_TIMESTAMP
+    time TIMESTAMP default CURRENT_TIMESTAMP,
+    PRIMARY KEY (`id`),
+    CONSTRAINT `fk_tweets_users_id` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION
 );
 
 

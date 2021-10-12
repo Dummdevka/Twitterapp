@@ -19,6 +19,7 @@ import { AuthGuard } from './auth.guard';
 import { AccountComponent } from './account/components/account/account.component';
 import { TweetsButtonComponent } from './tweets/components/my_tweets_button/tweets-button/tweets-button.component';
 import { TweetsInterceptorInterceptor } from './tweets/tweets-interceptor.interceptor';
+import { UsernameValidatorDirective } from './auth/components/sign-up/validators/username-validator.directive';
 
 const routes: Routes = [
   {path: 'tweets', 
@@ -46,6 +47,7 @@ const routes: Routes = [
     ButtonComponent,
     AccountComponent,
     TweetsButtonComponent,
+    UsernameValidatorDirective,
   ],
   imports: [
     BrowserModule,

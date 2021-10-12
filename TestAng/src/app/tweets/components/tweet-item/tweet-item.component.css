@@ -10,13 +10,23 @@
     background-color: #173f5f;
     color: #b8b8b8;
     font-size: 16px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+    
     margin-bottom: 1em;
     padding-left: 1em;
     padding-right: 1em;
     border-radius: 4px;
+}
+.tweetText{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px #777 solid;
+}
+.tweetImage{
+    display: block;
+    order: 0;
+    width: 100%;
+    margin-top: 5px;
 }
 .tweetOpt{
     display: flex;

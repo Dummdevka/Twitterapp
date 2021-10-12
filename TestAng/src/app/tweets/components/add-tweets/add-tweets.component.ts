@@ -1,6 +1,8 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { Tweet } from 'src/app/Tweet';
 import{faPaperPlane} from '@fortawesome/free-regular-svg-icons'
+import { faImages } from '@fortawesome/free-regular-svg-icons';
+import { faFolderMinus, faEraser } from '@fortawesome/free-solid-svg-icons';
 @Component({
   selector: 'app-add-tweets',
   templateUrl: './add-tweets.component.html',
@@ -9,9 +11,16 @@ import{faPaperPlane} from '@fortawesome/free-regular-svg-icons'
 export class AddTweetsComponent implements OnInit {
   text!:string;
   username!:string;
+  selectedFiles!: FileList;
+  imageUploaded = false;
+  imageName!: string;
 
   @Output() onAddTweet = new EventEmitter;
+  @Output() onSaveUploaded = new EventEmitter;
   faPaperPlane = faPaperPlane;
+  faImages = faImages;
+  faFolderMinus = faFolderMinus;
+  faEraser = faEraser;
   constructor( ) {
     
    }
@@ -19,16 +28,44 @@ export class AddTweetsComponent implements OnInit {
   ngOnInit(): void {
 
   }
+  loadFile(event: any){
+    this.selectedFiles = event.target.files;
+    if(this.selectedFiles && this.selectedFiles.length > 0){
+      if(this.selectedFiles[0].type.match('.( jpg|jpeg|png )')){
+        const imageName = this.selectedFiles[0];
+      //Save the image 
+      this.onSaveUploaded.emit(imageName);
+      //Show that it's added
+      this.imageUploaded = true;
+      this.imageName = imageName.name;
+      } else{
+        alert ("Invalid format :(");
+      }
+      
+    }
+  }
   AddTweet(){
+    let image = null;
     //Validation
   if(!this.text){
     alert("You forgot something :(");
     return;
   }
+  if(this.selectedFiles){
+   image = this.selectedFiles[0];
+   console.log(image);
+  }
+  //console.log(this.selectedFiles);
+  //Image check 
+  const tweet: Tweet ={
+    tweet: this.text,
+    image: image
+  }
+
   //Creating a new Tweet
   //Call the service
-  this.onAddTweet.emit(this.text);  
-  //Clear fields
+ this.onAddTweet.emit(tweet);  
+  // //Clear fields
   this.text = '';
   }
   

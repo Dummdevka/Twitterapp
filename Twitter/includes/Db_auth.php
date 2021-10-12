@@ -99,12 +99,12 @@ class Db_auth extends Db
                 return $user;
                 exit();
             } else {
-                http_response_code(422);
-                print_r(json_encode("Invalid pass"));
+                $this->setStatus(422, 'Invalid pass, sorry :(');
+                exit();
             }
         } else {
-            http_response_code(422);
-            print_r(json_encode("Invalid email"));
+            $this->setStatus(422, 'This email does not exist, sorry:(');
+            exit();
         }
     }
 
@@ -129,9 +129,43 @@ class Db_auth extends Db
         if($this->uniqUsername($username)){
             if($this->update($queryData1)&&$this->update($queryData2)){
                 return true;
-        } 
+        } else {
+            return false;
+        }
+    } 
+        // $data = [
+        //     ':username'=>$username,
+        //     ':id'=>$id
+        // ];
+        // try{
+        //     $sql = "UPDATE users, tweets 
+        // SET username=:username 
+        // FROM users INNER JOIN 
+        // ON tweets 
+        // WHERE users.uniqid=:id AND users.uniqid=tweets.userid";
+
+        // $sql = "START TRANSACTION;
+
+        // UPDATE users
+        // SET username=:username WHERE 
+        // uniqid=:id;
+
+        // UPDATE tweets
+        // SET username=:username
+        // FROM tweets INNER JOIN ON
+        // users
+        // WHERE tweets.uniqid=users.userid;
+
+        // COMMIT";
+        // $stmt = $this->connect()->prepare($sql);
+        // $stmt->execute($data);
+        // return true;
+        // } catch (Exception $e){
+        //     var_dump($e);
+        //     return false;
+        // }
         
-    }
+        
 }
 
     //This func changes password

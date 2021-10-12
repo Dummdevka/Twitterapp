@@ -60,6 +60,7 @@ abstract class BaseController
             )
         );
         $jwt = JWT::encode($access_token, $this->key);
+        
         echo json_encode(
             array(
                 "message" => "Successful login.",
@@ -175,13 +176,15 @@ abstract class BaseController
                     //print_r(strcmp($_GET['action'], 'refresh'));
                     return false;
                 }
-                    //exit();
+                   
                     
                 } else{
                     //If there is another error then log out and print it
                     var_dump($e->getMessage());
                     $this->setStatus(404, $token);
                 }
+            } finally{
+                $this->setUniqId();
             }
         }
     }
@@ -190,5 +193,15 @@ abstract class BaseController
         $rawPostData = file_get_contents('php://input');
         $postData = json_decode($rawPostData);
         return $postData;
+    }
+
+    public function setUniqId(){
+        if(!empty($_COOKIE['refresh'])){
+            $token = $this->decode($_COOKIE['refresh']);
+            $this->id = $token->data->uniqid;
+            $this->user = $token->data->username;
+        } else{
+            http_response_code(403, "No refresh token");
+        }
     }
 }
