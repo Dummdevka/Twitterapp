@@ -14,7 +14,7 @@ export class AddTweetsComponent implements OnInit {
   selectedFiles!: FileList;
   imageUploaded = false;
   imageName!: string;
-
+  error = '';
   @Output() onAddTweet = new EventEmitter;
   @Output() onSaveUploaded = new EventEmitter;
   faPaperPlane = faPaperPlane;
@@ -34,12 +34,12 @@ export class AddTweetsComponent implements OnInit {
       if(this.selectedFiles[0].type.match('.( jpg|jpeg|png )')){
         const imageName = this.selectedFiles[0];
       //Save the image 
-      this.onSaveUploaded.emit(imageName);
+      //this.onSaveUploaded.emit(imageName);
       //Show that it's added
       this.imageUploaded = true;
       this.imageName = imageName.name;
       } else{
-        alert ("Invalid format :(");
+        this.setError("Invalid format :(");
       }
       
     }
@@ -48,26 +48,34 @@ export class AddTweetsComponent implements OnInit {
     let image = null;
     //Validation
   if(!this.text){
-    alert("You forgot something :(");
+    this.setError("You forgot something :(");
     return;
   }
   if(this.selectedFiles){
    image = this.selectedFiles[0];
-   console.log(image);
   }
-  //console.log(this.selectedFiles);
-  //Image check 
+  
+  //Creating a new Tweet
   const tweet: Tweet ={
     tweet: this.text,
     image: image
   }
 
-  //Creating a new Tweet
   //Call the service
  this.onAddTweet.emit(tweet);  
   // //Clear fields
   this.text = '';
   }
   
+  clearImage(){
+    this.selectedFiles[0].slice;
+  }
+  setError(error: string){
+    this.error = error;
+
+    setTimeout(()=>{
+      this.error = '';
+    }, 1800);
+  }
 }
 

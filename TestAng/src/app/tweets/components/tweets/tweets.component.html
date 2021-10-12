@@ -1,5 +1,8 @@
 <button  class="tweets-button account"[(ngModel)]="username" routerLink="/account" >Hi, {{ username }}</button>
-<app-add-tweets (onAddTweet)="addTweet($event)" (onSaveUploaded)="saveUploadedImage($event)"></app-add-tweets>
+<app-add-tweets (onAddTweet)="addTweet($event)"></app-add-tweets>
+<div *ngIf="this.error">
+    <p class="error-mess">{{ this.error }}</p>
+</div>
 <div *ngIf="showAll; else showAllTweets">
     <app-tweets-button [text]="'Show my tweets'" (onShowMyTweets)="myTweets()"></app-tweets-button>
 </div>

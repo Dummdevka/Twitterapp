@@ -13,6 +13,7 @@ import { forkJoin } from 'rxjs';
 })
 export class TweetsComponent implements OnInit {
   tweets!:Tweet[];
+  error = '';
   username!:string;
   showAll = true;
   uploadedImg!: File;
@@ -57,7 +58,7 @@ export class TweetsComponent implements OnInit {
               
               
             }
-            console.log(err);
+            this.error = "Tweets could not be fetched :(";
             //this.onLogOut();
           }
         });
@@ -97,7 +98,7 @@ export class TweetsComponent implements OnInit {
       await this.checkAllow();
       this.getTweets();
       this.getUsername();
-      this.getImage()
+      
 }
 addTweet(tweet:Tweet){
   //Refresh the token before sending the tweet
@@ -121,7 +122,21 @@ addTweet(tweet:Tweet){
   //Post tweet
   this.tweetService.postTweet(tweetData).subscribe((tweets:Tweet[])=>{
     this.tweets = tweets;
-  });
+  },
+  err=>{
+    if(err instanceof HttpErrorResponse){
+      if(err.status === 415){
+        alert(err.error);
+      }
+      if(err.status === 500){
+        alert(err.error);
+      }
+      //Alert error that tweet could not be posted
+      //this.error = "Tweet could not be posted";
+      alert(err.message);
+    }
+  }
+  );
 
   
 }
@@ -156,22 +171,4 @@ allTweets(){
   this.getTweets();
   this.showAll=true;
 }
-getImage(){
-  if(localStorage.getItem('image')){
-    
-  }
-}
-saveUploadedImage(image: File){
-
-    // this.uploadedImg = image;
-    // const imageData = new FormData();
-    // imageData.append('file', image);
-    
-    // this.tweetService.sendImage(imageData).subscribe(
-    //   res=>{
-    //     console.log(res);
-    //   }
-    // )
-    // console.log(imageData.append);
-  }
 }

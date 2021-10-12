@@ -11,10 +11,13 @@
     </label>
 
 </form>
+<div class="error-rep" *ngIf="this.error">
+    <p class="error-mess">{{ this.error }}</p>
+</div>
 <div *ngIf="imageUploaded">
     <div class="selected-pic">
         <span class="selected-file">{{ imageName }}</span>
-        <button class="buttonPic deletePic">
+        <button class="buttonPic deletePic" (click)="clearImage()">
             <fa-icon [icon]="faEraser"></fa-icon>
         </button>
         <button class="buttonPic changePic">

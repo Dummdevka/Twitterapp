@@ -43,10 +43,20 @@ body{
 }
 .error-mess{
     display: block;
-    color: rgb(238, 93, 93);
-    background-color: rgb(250, 195, 195);
-    border: 1px rgb(192, 58, 58) solid;
-    height: 1.5em;
+    color: #d8000bbe;
+    background-color: #f39f91;
+    padding-top: 0.6em;
+    height: 2em;
+    width: 70%;
+    font-size: 1em;
+    margin-left: 15%;
     margin-bottom: 5px;
     text-align: center;
+    border-radius: 2px;
+    
+}
+.error-rep{
+    transition: 2s, 2s, 2s, 2s, ease-in-out;
+    -webkit-transition: 2s, 2s, 2s, 2s, ease-in-out;
+    -moz-transition: 2s, 2s, 2s, 2s, ease-in-out;
 }

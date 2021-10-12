@@ -9,9 +9,9 @@
     </div>
     </div>
     
-    <div *ngIf="tweet.url" class="tweetImage">
+    <div *ngIf="tweet.file_name" class="tweetImage">
         <!-- <img src="{{tweet.url}}" alt="{{tweet.url}}"> -->
-        <img src="{{tweet.url}}" alt="{{tweet.url}}">
+        <img class="tweetImage" src="assets/img/{{ tweet.file_name }}" alt="{{tweet.file_name}}">
     </div>
 </div>
 <div *ngIf="tweet.username === username ">
