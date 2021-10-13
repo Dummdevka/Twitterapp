@@ -1,3 +1,6 @@
+<div *ngIf="this.errors">
+    <p class="error-mess">{{ this.errors }}</p>
+</div>
 <div  class="signUp authContent">
     <app-button [routerLink]="'/login'" [text]="'Log-In'"></app-button>
     <form [formGroup]="signupForm" class="authForm" (ngSubmit)="onSignUp(username!.value, email!.value, pass!.value)">

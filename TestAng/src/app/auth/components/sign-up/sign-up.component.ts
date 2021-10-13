@@ -14,7 +14,7 @@ export class SignUpComponent implements OnInit {
   UserName: string = "Admin";
   Email:string = "Admin123@gmail.com";
   Pwd:string = "Admin123";
-  errors: [] = [];
+  errors: string = '';
   @Output() signUpFunc = new EventEmitter;
   signupForm!: FormGroup;
   constructor( private fb: FormBuilder, private authService: AuthService, private router:Router) { 
@@ -52,7 +52,6 @@ export class SignUpComponent implements OnInit {
     console.log(typeof errorsArr)
   }
   onSignUp(username:string, email:string, pass:string){
-    this.errors = [];
     if(this.signupForm.status === 'VALID'){
       const user: User = {
         username: username,
@@ -67,25 +66,23 @@ export class SignUpComponent implements OnInit {
         },
         err =>{
           if(err instanceof HttpErrorResponse){
-            if(err.status === 422){
-              alert(err.error);
-            }
+            
+            this.setError(err.error);
           }
         }
       )
       
     } else{
-      alert("You can't submit an invalid form!");
+      this.setError("You can't submit an invalid form");
     }
     
 
   }
+  setError(error: string){
+    this.errors = error;
 
-  //Custom validator (unique username)
-  // uniqueUsernameValidator(username:string): ValidatorFn {
-  //   return (control: AbstractControl):
-  //   ValidationErrors | null => {
-
-  //   }
-  // }
+    setTimeout(()=>{
+      this.errors = '';
+    }, 1800);
+  }
 }

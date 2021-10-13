@@ -125,15 +125,7 @@ addTweet(tweet:Tweet){
   },
   err=>{
     if(err instanceof HttpErrorResponse){
-      if(err.status === 415){
-        alert(err.error);
-      }
-      if(err.status === 500){
-        alert(err.error);
-      }
-      //Alert error that tweet could not be posted
-      //this.error = "Tweet could not be posted";
-      alert(err.message);
+      this.error = err.error;
     }
   }
   );

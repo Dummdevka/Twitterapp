@@ -53,28 +53,54 @@ class Auth extends BaseController{
         $postData = $this->getPostData();
         
         if(!empty(trim($postData->username)) && !empty(trim($postData->email)) && !empty(trim($postData->pass))){
-            if(($this->validateUsername($postData->username)===true)&&($this->validateEmail($postData->email)===true)&&($this->validatePass($postData->pass)===true)){
-                $password = password_hash($postData->pass, PASSWORD_DEFAULT);
-                $this->username = $postData->username;
-                $this->email = $postData->email;
-                $this->pass = $password;
-            } else {
-                $this->setStatus(422, "Invalid data, sorry :(");
+            if($this->validateUsername($postData->username)){
+                if($this->validateEmail($postData->email)){
+                    if($this->validatePass($postData->pass)){
+                        $password = password_hash($postData->pass, PASSWORD_DEFAULT);
+                        $this->username = $postData->username;
+                        $this->email = $postData->email;
+                        $this->pass = $password;
+
+                        $newUserData = [
+                            'username' => $this->username,
+                            'email' => $this->email,
+                            'pass' => $this->pass
+                        ];
+
+                        try{
+                            $this->db_auth->addUser($newUserData);
+                        } catch (Exception $e){
+                            $this->setStatus(500, $e->getMessage());
+                            exit();
+                        }
+                    } else{
+                        $this->setStatus(422, "Invalid pass :(");
+                    }
+                } else{
+                    $this->setStatus(422, "Invalid email :(");
+                    exit();
+                }
+            } else{
+                $this->setStatus(422, "Invalid username :(");
                 exit();
             }
-            if(!empty($this->errors)){
-                //Access forbidden
-                $this->setStatus(403, $this->errors);
-                exit();
-            }
-            $newUserData = [
-                'username' => $this->username,
-                'email' => $this->email,
-                'pass' => $this->pass
-            ];
-            $data = $this->db_auth->addUser($newUserData);
+            // if(($this->validateUsername($postData->username)===true)&&($this->validateEmail($postData->email)===true)&&($this->validatePass($postData->pass)===true)){
+            //     $password = password_hash($postData->pass, PASSWORD_DEFAULT);
+            //     $this->username = $postData->username;
+            //     $this->email = $postData->email;
+            //     $this->pass = $password;
+            // } else {
+            //     $this->setStatus(422, "Invalid data, sorry :(");
+            //     exit();
+            // }
+            // if(!empty($this->errors)){
+            //     //Access forbidden
+            //     $this->setStatus(403, $this->errors);
+            //     exit();
+            // }
+            
         } else{
-            $this->setStatus(422, "Invalid data, sorry :(");
+            $this->setStatus(422, "We couldn't fetch your data :(");
             exit();
         }
     }

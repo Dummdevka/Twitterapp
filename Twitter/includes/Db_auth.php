@@ -57,7 +57,6 @@ class Db_auth extends Db
     //This function sends data to the database to add new user
     public function addUser($userData)
     {
-        try{
         $email = $userData['email'];
         $pass = $userData['pass'];
         $username = $userData['username'];
@@ -65,8 +64,7 @@ class Db_auth extends Db
         //Check if the user exists
         $data = [':username' => $username, ':email' => $email];
         if($this->userExists($data)){
-            http_response_code(403);
-            print_r(json_encode("User exists"));
+            $this->setStatus(403, "User already exists!");
             exit();
         }
         // Inserting a new user
@@ -75,10 +73,7 @@ class Db_auth extends Db
         $stmt = $pdo->prepare($sql);
         $stmt->execute([':uniqid'=>$uniqId, ':username' => $username, ':email' => $email, ':pass' => $pass]);
         print_r(json_encode( $userData));
-        } catch( Exception $e){
-            print_r(json_encode($e->getMessage()));
-            exit();
-        }
+        
         
     }
 
@@ -133,39 +128,6 @@ class Db_auth extends Db
             return false;
         }
     } 
-        // $data = [
-        //     ':username'=>$username,
-        //     ':id'=>$id
-        // ];
-        // try{
-        //     $sql = "UPDATE users, tweets 
-        // SET username=:username 
-        // FROM users INNER JOIN 
-        // ON tweets 
-        // WHERE users.uniqid=:id AND users.uniqid=tweets.userid";
-
-        // $sql = "START TRANSACTION;
-
-        // UPDATE users
-        // SET username=:username WHERE 
-        // uniqid=:id;
-
-        // UPDATE tweets
-        // SET username=:username
-        // FROM tweets INNER JOIN ON
-        // users
-        // WHERE tweets.uniqid=users.userid;
-
-        // COMMIT";
-        // $stmt = $this->connect()->prepare($sql);
-        // $stmt->execute($data);
-        // return true;
-        // } catch (Exception $e){
-        //     var_dump($e);
-        //     return false;
-        // }
-        
-        
 }
 
     //This func changes password
