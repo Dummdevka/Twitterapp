@@ -10,7 +10,7 @@
 @fox: #A33B20;
 @light-brown: #A47963;
 @hackey: #A6A57A;
-
+@error: #f48c06;
 @arial: 'Arial';
 
 @large: 32px;
@@ -43,22 +43,20 @@
    .input(default, 25px, 0.5em, 0, 1.5em,0);
 }
 .authInput.ng-touched.ng-invalid{
-    border: 1px red solid;
+    border: 1px @error solid;
     background-color: rgba(245, 135, 135, 0.548);
 }
 
 .error-mess{
+    .btn(@fox, 2em, 70%, 0, 0, 5px, 15%);
     display: block;
-    color: #d8000bbe;
-    background-color: #f39f91;
-    padding-top: 0.6em;
-    height: 2em;
-    width: 70%;
+    color: @hackey;
+    background-color: @fox;
+    border: 1px @dark-blue solid;
+    padding-top: 0.7em;
     font-size: 1em;
-    margin-left: 15%;
-    margin-bottom: 5px;
     text-align: center;
-    border-radius: 2px;
+    .transition(0.6s ease-out);
     
 }
 

@@ -11,9 +11,7 @@ import { HttpErrorResponse } from '@angular/common/http';
   styleUrls: ['./sign-up.component.less']
 })
 export class SignUpComponent implements OnInit {
-  UserName: string = "Admin";
-  Email:string = "Admin123@gmail.com";
-  Pwd:string = "Admin123";
+  
   errors: string = '';
   @Output() signUpFunc = new EventEmitter;
   signupForm!: FormGroup;

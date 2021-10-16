@@ -11,8 +11,7 @@ import { Router } from '@angular/router';
   styleUrls: ['./log-in.component.less']
 })
 export class LogInComponent implements OnInit {
-  e_mail:string = "Admin123@gmail.com";
-  pwd:string = "Admin123";
+  
   loginForm!: FormGroup;
   errors!:string;
   constructor(private fb: FormBuilder, private authServuce: AuthService, private router:Router) {

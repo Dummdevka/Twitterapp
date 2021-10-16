@@ -10,19 +10,19 @@
         id="username" 
         formControlName="username" 
         class="authInput"
-        [(ngModel)]="UserName"> 
+        > 
          <div *ngIf="username!.invalid && (username!.dirty || username!.touched)">
             <span class="error-mess" *ngIf="username!.errors?.required">Username is required!</span>
             <span class="error-mess" *ngIf="username!.errors?.minlength">Username is shorter than {{ username!.errors?.minlength.requiredLength }}!</span>
             <span class="error-mess" *ngIf="username!.errors?.maxlength">Username is shorter than {{ username!.errors?.maxlength.requiredLength }}!</span>
         </div> 
         <label for="email">Your e-mail:</label>
-        <input type="text" id="email" formControlName="email" class="authInput" [(ngModel)]="Email">
+        <input type="text" id="email" formControlName="email" class="authInput">
         <div *ngIf="email!.invalid && (email!.dirty || email!.touched)">
             <span class="error-mess" *ngIf="email!.errors">Invalid email!</span>
         </div> 
         <label for="pass">Your password:</label>
-        <input type="password" id="pass" formControlName="pass" class="authInput" [(ngModel)]="Pwd">
+        <input type="password" id="pass" formControlName="pass" class="authInput">
         <input type="submit" id="signUpButton">
     </form>
 
