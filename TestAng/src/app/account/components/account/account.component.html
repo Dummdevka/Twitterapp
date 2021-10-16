@@ -1,0 +1,42 @@
+<div class="account-data">
+    <h2>My account:</h2>
+    <div class="account-data-block">
+        <p class="user-data username"><b>Username:</b></p>
+        <div *ngIf="newUsername; else oldUsername">
+            <form (ngSubmit)="sendUsername($event)">
+                <input type="text" name="user" class="new-username" placeholder="Type your new username...">
+                <label for="send-username">
+                    <fa-icon [icon]="faCheckCircle"></fa-icon>
+                </label>
+                <button type="submit" id="send-username" hidden></button>
+            </form>
+        </div>
+        <ng-template #oldUsername>
+            <p class="user-data username-text"> {{ username }}</p>
+            <fa-icon [icon]="faPencil" (click)="changeUsername()"></fa-icon>
+        </ng-template>
+    </div>
+    <div class="account-data-block">
+        <p class="user-data email"><b>Email:</b></p>
+        <p class="user-data email-text"> {{ email }}</p>
+        
+    </div>
+    <div *ngIf="newPass; else oldPass">
+        <form (ngSubmit)="changePass($event)">
+
+            <input type="text" class="old-pass" name="old" placeholder="Type your old pass here...">
+            <input type="text" class="new-pass" name="new" placeholder="Type your new password here...">
+
+        <label for="newPass">
+            <fa-icon id="change-pass-icon" [icon]="faCheckCircle"></fa-icon>
+        </label>
+        <button type="submit" id="newPass" hidden></button>
+        </form>
+        
+    </div>
+    <ng-template #oldPass>
+        <button class="account-button delete" (click)="deleteUser()">Delete account</button>
+        <button class="account-button change" (click)="showChangePass()">Change password</button>
+    </ng-template>
+    
+</div>

@@ -1,0 +1,70 @@
+@import "../../../../styles.less";
+.account-data{
+    width: 80%;
+    margin-left: 10%;
+    margin-top: 10px;
+}
+.account-data-block{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    .btn(@dark-blue, default, default, 2px, 0,0,0);
+    font-size: @regular;
+    // background-color: #173f5f;
+    padding: 5px;
+    color: @light-brown;
+    border: 1px @light-brown solid;
+    // border-radius: 5px;
+    // margin-top: 2px;
+}
+fa-icon{
+    color: @dark-green;
+    cursor: pointer;
+}
+.account-button{
+    .btn(@fox, 2em, 50%, 0.5em, 0,0,0);
+    border: 1px @hackey solid;
+    color: @hackey;
+    font-size: @regular;
+    .transition(0.7s 1ms ease-out);
+}
+.account-button:hover{
+    background-color: @hackey;
+    border: 1px @fox solid;
+    color: @fox;
+}
+.user-data{
+    width: 20%;
+}
+.new-username,
+.new-email,
+.old-pass,
+.new-pass{
+    width: 20em;
+    height: 1.5em;
+    background-color: #888;
+    color: rgb(174, 197, 91);
+    border: 1px rgb(174, 197, 91) solid;
+    border-radius: 3px;
+    margin-right: 5px;
+}
+.email-text{
+    width: 70%;
+    text-align: center;
+}
+.old-pass,
+.new-pass{
+    margin-top: 5px;
+    height: 2em;
+    width: 90%;
+    display: block;
+    margin-left: 5%;
+}
+#change-pass-icon{
+    width: 100%;
+    height: 3em;
+    text-align: center;
+    display: block;
+    margin-top: 5px;
+    font-size: 20px;
+}

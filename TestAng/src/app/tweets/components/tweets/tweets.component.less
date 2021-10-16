@@ -1,0 +1,20 @@
+@import "../../../../styles.less";
+
+.tweets-button{
+    .btn(inherit, 2em, 80%, 0,0,0.5em,10%);
+    text-align: left;
+    font-size: @medium;
+    color: @fox;
+}
+.logout{
+    .btn(@fox, 2em, 20%, 10px,0,0,70%);
+    color: @hackey;
+    font-size: @regular;
+    position: absolute;
+    border: 1px @dark-blue solid;
+    .transition(0.7s ease-out)
+}
+.logout:hover{
+    background-color: @hackey;
+    color: @fox;
+}

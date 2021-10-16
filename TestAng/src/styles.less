@@ -1,0 +1,89 @@
+
+@pirple: #3C1B43;
+@dark-red: #501537;
+@pink: #922D50;
+@light-green: #D4E79E;
+@dark-green: #B8C480;
+
+@dark-blue: #27213C;
+@brown: #5A352A;
+@fox: #A33B20;
+@light-brown: #A47963;
+@hackey: #A6A57A;
+@error: #f48c06;
+@arial: 'Arial';
+
+@large: 32px;
+@medium: 24px;
+@regular: 16px;
+@small: 8px;
+*{
+    border: none;
+}
+.authForm{
+    display: flex;
+    justify-content: center;
+    flex-flow: column;
+    width: 90%;
+    margin-left: 5%;
+    margin-top: 1em;
+}
+.authContent{
+    border-radius: 4px;
+
+    color: @light-green;
+    display: flex;
+    justify-content: center;
+    width: 60%;
+    flex-flow: column;
+    margin-left: 20%;
+    background-color: @dark-blue;
+}
+.authInput{
+   .input(default, 25px, 0.5em, 0, 1.5em,0);
+}
+.authInput.ng-touched.ng-invalid{
+    border: 1px @error solid;
+    background-color: rgba(245, 135, 135, 0.548);
+}
+
+.error-mess{
+    .btn(@fox, 2em, 70%, 0, 0, 5px, 15%);
+    display: block;
+    color: @hackey;
+    background-color: @fox;
+    border: 1px @dark-blue solid;
+    padding-top: 0.7em;
+    font-size: 1em;
+    text-align: center;
+    .transition(0.6s ease-out);
+    
+}
+
+.btn(@color, @height, @width, @mt, @ml, @mb, @mr){
+    background-color: @color;
+    height: @height;
+    width: @width;
+    margin: @mt @ml @mb @mr;
+    cursor: pointer;
+    border-radius: 4px;
+    text-align: center;
+}
+.input(@width, @height, @mt, @mr, @mb, @ml){
+    width: @width;
+    height: @height;
+    margin: @mt @mr @mb @ml;
+    border: 1px @dark-green solid;
+    border-radius: 3px;
+}
+.transition(@tr){
+    transition: @tr;;
+    -webkit-transition: @tr;;
+    -moz-transition: @tr;;
+}
+
+body{
+    background-color: @hackey;
+    font-family: @arial;
+    font: @fox;
+}

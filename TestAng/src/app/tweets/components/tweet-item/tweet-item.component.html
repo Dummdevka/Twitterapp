@@ -1,11 +1,21 @@
 <div class="postTweet">
 <div class="singleTweet">
-    <p class="tweetText">{{tweet.tweet}}</p>
+    <div class="tweetText">
+        <p class="tweetTweet">{{tweet.tweet}}</p>
+    
     <div class="tweetOpt">
-        <small class="tweetUser">{{tweet.username}}</small>
+        <small class="tweetUsername">{{ tweet.username }}</small>
         <small class="tweetTime">{{tweet.time}}</small>
     </div>
+    </div>
+    
+    <div *ngIf="tweet.file_name" class="tweetImage">
+        <!-- <img src="{{tweet.url}}" alt="{{tweet.url}}"> -->
+        <img class="tweetImage" src="assets/img/{{ tweet.file_name }}" alt="{{tweet.file_name}}">
+    </div>
 </div>
-<fa-icon [icon]="faTrash" (click)="DeleteTweet(tweet)"></fa-icon>
+<div *ngIf="tweet.username === username ">
+    <fa-icon [icon]="faTrash" (click)="DeleteTweet(tweet)"></fa-icon>
+</div>
 </div>
 

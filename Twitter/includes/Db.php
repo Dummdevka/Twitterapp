@@ -1,7 +1,6 @@
 <?php
 
-
-class Db{
+abstract class Db{
     protected $host;
     protected $user;
     protected $pass;
@@ -46,40 +45,30 @@ class Db{
             echo "No db connection:" . $e->getCode();
             exit();
         }
-    //Show tweets
     }
-    public function get_tweets(){
-        $sql = "SELECT * FROM tweets ORDER BY id DESC ";
-        $pdo = $this->connect();
+   
+    //Updates data based on uniqId
+    public function update(array $queryData){
+        $table = $queryData['table'];
+        $field = $queryData['field'];
+        $val = $queryData['val'];
+        $field2 = $queryData['field2'];
+        $val2 = $queryData['val2'];
+        try{
+            $sql = "UPDATE $table SET $field=:$field WHERE $field2=:field2";
+            $data = [":$field"=>$val,
+            ":field2"=>$val2];
 
-        //Execute the query
-        $stmt=$pdo->prepare($sql);
-        $stmt->execute(); 
-
-        //Fetch the result
-        $res = $stmt->fetchAll();
-
-        return $res;
+            $stmt = $this->connect()->prepare($sql);
+            $stmt->execute($data);
+            return true;
+        } catch(Exception $e){
+            return $e->getMessage();
+        }
     }
-
-    //Add new tweets
-
-    public function insert_tweet($tweet, $username){
-        $sql = "INSERT INTO tweets (username,tweet) VALUES (:username,:tweet)";
-        $pdo = $this->connect();
-
-        $stmt=$pdo->prepare($sql);
-        $stmt->execute([':tweet' => $tweet, ':username' => $username]);
-    }
-
-    //Delete tweets
-
-    public function delete_tweet($id){
-        $sql = "DELETE FROM tweets WHERE id=:id";
-        $pdo = $this->connect();
-
-        $stmt=$pdo->prepare($sql);
-        $stmt->execute([':id'=> $id]);
-    }
+        public function setStatus($status, $message){
+            http_response_code($status);
+            echo json_encode($message);
+        }
 
 }

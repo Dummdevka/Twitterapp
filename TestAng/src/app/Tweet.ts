@@ -1,6 +1,9 @@
 export interface Tweet{
     id?:number;
-    username:string;
+    username?:string;
     tweet:string;
-    time?:string
+    time?:string;
+    image?: any;
+    url?: string
+    file_name?: string
 }
