@@ -9,7 +9,7 @@ import { TestServiceService } from 'src/app/tweets-service.service';
 @Component({
   selector: 'app-account',
   templateUrl: './account.component.html',
-  styleUrls: ['./account.component.css']
+  styleUrls: ['./account.component.less']
 })
 export class AccountComponent implements OnInit {
   username!: string;

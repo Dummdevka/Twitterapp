@@ -4,7 +4,7 @@ import { faTrash } from '@fortawesome/free-solid-svg-icons';
 @Component({
   selector: 'app-tweet-item',
   templateUrl: './tweet-item.component.html',
-  styleUrls: ['./tweet-item.component.css']
+  styleUrls: ['./tweet-item.component.less']
 })
 export class TweetItemComponent implements OnInit {
   @Output() onDeleteTweet = new EventEmitter;

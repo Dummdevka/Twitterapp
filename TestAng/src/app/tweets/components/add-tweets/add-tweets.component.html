@@ -4,7 +4,7 @@
     <label for="pic">
         <fa-icon class="icon-tweets" [icon]="faImages"></fa-icon>
     </label>
-    <input type="file" id="pic" (change)="loadFile($event)"hidden>
+    <input #takeInput name="takeInput" type="file" id="pic" (change)="loadFile($event)" hidden>
     
     <label for="send">
         <fa-icon class="icon-tweets" [icon]="faPaperPlane"></fa-icon>
@@ -20,9 +20,9 @@
         <button class="buttonPic deletePic" (click)="clearImage()">
             <fa-icon [icon]="faEraser"></fa-icon>
         </button>
-        <button class="buttonPic changePic">
+        <label for="pic" class="buttonPic changePic">
             <fa-icon [icon]="faFolderMinus"></fa-icon>
-        </button>
+        </label>
     </div>
 
 </div>

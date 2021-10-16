@@ -8,7 +8,7 @@ import { Router } from '@angular/router';
 @Component({
   selector: 'app-log-in',
   templateUrl: './log-in.component.html',
-  styleUrls: ['./log-in.component.css']
+  styleUrls: ['./log-in.component.less']
 })
 export class LogInComponent implements OnInit {
   e_mail:string = "Admin123@gmail.com";

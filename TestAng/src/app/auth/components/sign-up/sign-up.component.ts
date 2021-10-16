@@ -8,7 +8,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 @Component({
   selector: 'app-sign-up',
   templateUrl: './sign-up.component.html',
-  styleUrls: ['./sign-up.component.css']
+  styleUrls: ['./sign-up.component.less']
 })
 export class SignUpComponent implements OnInit {
   UserName: string = "Admin";
@@ -75,8 +75,6 @@ export class SignUpComponent implements OnInit {
     } else{
       this.setError("You can't submit an invalid form");
     }
-    
-
   }
   setError(error: string){
     this.errors = error;

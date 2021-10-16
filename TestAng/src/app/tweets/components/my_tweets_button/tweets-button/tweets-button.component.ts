@@ -3,7 +3,7 @@ import { Output, EventEmitter } from '@angular/core';
 @Component({
   selector: 'app-tweets-button',
   templateUrl: './tweets-button.component.html',
-  styleUrls: ['./tweets-button.component.css']
+  styleUrls: ['./tweets-button.component.less']
 })
 export class TweetsButtonComponent implements OnInit {
   @Output() onShowMyTweets = new EventEmitter;

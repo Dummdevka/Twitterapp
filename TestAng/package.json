@@ -24,6 +24,7 @@
     "@fortawesome/free-solid-svg-icons": "^5.15.4",
     "cors": "^2.8.5",
     "fontawesome": "^5.6.3",
+    "less": "^4.1.2",
     "rxjs": "~6.6.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.11.4"
@@ -39,6 +40,8 @@
     "karma-coverage": "~2.0.3",
     "karma-jasmine": "~4.0.0",
     "karma-jasmine-html-reporter": "~1.7.0",
+    "less-loader": "^10.1.0",
+    "lessc": "^1.0.2",
     "typescript": "~4.3.5"
   }
 }

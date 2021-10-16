@@ -1,0 +1,49 @@
+@import (reference) "../../../../styles.less";
+
+form{
+    margin-bottom: 10px;
+    margin-left: 10%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+input{
+    .input(80%, 3em, 3px, 0, 0, 0);
+}
+label{
+    display: block;
+    .btn(@brown, 2.2em, 10%, 2px,0,0,1.5px );
+    font-size: 20px;
+    color: @light-green;
+}
+.icon-tweets{
+    display: block;
+    margin-top: 10px;
+}
+.selected-file{
+    display: block;
+    width: 80%;
+    font-size: @regular;
+    //color: @brown;
+}
+.selected-pic{
+    .btn(@light-brown, 3em, 80%, 0,0,0.5em, 10%);
+    border: 1px @light-brown solid;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    
+}
+.buttonPic{
+    .btn(@brown, 80%, 2.5em, 0,0,0,0);
+    //border: 1px @pink solid;
+    border-radius: 2px;
+    font-size: @regular;
+    color: @light-green;
+    text-align: center;
+}
+.changePic{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}

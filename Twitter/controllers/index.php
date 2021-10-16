@@ -29,25 +29,14 @@ class Index extends BaseController
                     }
                 }
             }
-            // if (isset($_GET['action']) && strcmp($_GET['action'],'saveImage')==0){
-            //     var_dump($_FILES);
-            //     exit();
-            //         if($this->checkToken()===false){
-            //             $this->saveImg();
-            //             exit();
-            //         } else{
-            //             return false;
-            //         }
-                
-            //}
+            
             print_r(json_encode($this->db_tweets->get_tweets()));
        
     }
     public function saveImg($imageData){
 
         $ext = substr($imageData['type'], 6);
-        // var_dump($ext);
-        // exit();
+
         //Unique name
         $name = time().'-'.uniqid(rand()). '.' . $ext;
         

@@ -1,3 +1,4 @@
+<button (click)="onLogOut()" class="tweets-button logout">Log out</button>
 <button  class="tweets-button account"[(ngModel)]="username" routerLink="/account" >Hi, {{ username }}</button>
 <app-add-tweets (onAddTweet)="addTweet($event)"></app-add-tweets>
 <div *ngIf="this.error">
@@ -12,4 +13,3 @@
 <div class="tweets-feed">
     <app-tweet-item *ngFor="let tweet of tweets" [username]="username" [tweet]="tweet" (onDeleteTweet)="deleteTweet($event)"></app-tweet-item>
 </div>
-<button (click)="onLogOut()" class="tweets-button logout">Log out</button>

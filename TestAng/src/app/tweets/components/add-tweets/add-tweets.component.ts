@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, ViewChild, ElementRef, Renderer2 } from '@angular/core';
 import { Tweet } from 'src/app/Tweet';
 import{faPaperPlane} from '@fortawesome/free-regular-svg-icons'
 import { faImages } from '@fortawesome/free-regular-svg-icons';
@@ -6,7 +6,7 @@ import { faFolderMinus, faEraser } from '@fortawesome/free-solid-svg-icons';
 @Component({
   selector: 'app-add-tweets',
   templateUrl: './add-tweets.component.html',
-  styleUrls: ['./add-tweets.component.css']
+  styleUrls: ['./add-tweets.component.less']
 })
 export class AddTweetsComponent implements OnInit {
   text!:string;
@@ -21,7 +21,9 @@ export class AddTweetsComponent implements OnInit {
   faImages = faImages;
   faFolderMinus = faFolderMinus;
   faEraser = faEraser;
-  constructor( ) {
+
+  @ViewChild('takeInput', {static: false}) takeInput!:ElementRef;
+  constructor( rd: Renderer2) {
     
    }
 
@@ -68,7 +70,13 @@ export class AddTweetsComponent implements OnInit {
   }
   
   clearImage(){
-    this.selectedFiles[0].slice;
+    
+    this.takeInput.nativeElement.value = '';
+    this.imageName = this.takeInput.nativeElement.value ;
+    this.imageUploaded = false;
+    console.log(    this.takeInput.nativeElement.value 
+    )
+
   }
   setError(error: string){
     this.error = error;

@@ -9,7 +9,7 @@ import { forkJoin } from 'rxjs';
 @Component({
   selector: 'app-tweets',
   templateUrl: './tweets.component.html',
-  styleUrls: ['./tweets.component.css']
+  styleUrls: ['./tweets.component.less']
 })
 export class TweetsComponent implements OnInit {
   tweets!:Tweet[];
@@ -54,10 +54,6 @@ export class TweetsComponent implements OnInit {
   
         err=>{
           if(err instanceof HttpErrorResponse){
-            if(err.status === 0){
-              
-              
-            }
             this.error = "Tweets could not be fetched :(";
             //this.onLogOut();
           }
@@ -129,8 +125,6 @@ addTweet(tweet:Tweet){
     }
   }
   );
-
-  
 }
 
 deleteTweet(tweet: Tweet){
